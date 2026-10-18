@@ -1,111 +1,941 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Siva Nanda Reddy Ramireddy | Portfolio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Siva Nanda Reddy Ramireddy | Embedded Systems & EEE Portfolio</title>
+  
+  <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Google Fonts: JetBrains Mono & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            circuit: {
+              bg: '#040810',
+              card: 'rgba(8, 16, 32, 0.75)',
+              border: '#0ea5e9',
+              glow: '#00f2fe',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'glow-scan': 'scan 3s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' },
+            },
+            scan: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(1000%)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Neon Glow & Cyberpunk Glassmorphic Utilities */
+    body {
+      background-color: #030712;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+    
+    .glass-panel {
+      background: rgba(11, 20, 38, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(14, 165, 233, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    }
+    
+    .glass-panel:hover {
+      border-color: rgba(56, 189, 248, 0.45);
+      box-shadow: 0 0 25px rgba(14, 165, 233, 0.25);
+    }
+
+    .neon-text-cyan {
+      text-shadow: 0 0 10px rgba(6, 182, 212, 0.7), 0 0 25px rgba(6, 182, 212, 0.4);
+    }
+
+    .neon-border {
+      position: relative;
+    }
+    
+    .neon-border::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(90deg, #06b6d4, #3b82f6, #10b981);
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0.35;
+      transition: opacity 0.3s ease;
+    }
+
+    .neon-border:hover::after {
+      opacity: 0.8;
+      filter: blur(2px);
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #030712;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0284c7;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #38bdf8;
+    }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans leading-relaxed">
 
-  <!-- Header / Hero -->
-  <header class="max-w-4xl mx-auto pt-16 pb-12 px-6 border-b border-slate-800">
-    <h1 class="text-4xl font-extrabold text-white tracking-tight">Siva Nanda Reddy Ramireddy</h1>
-    <p class="text-xl text-teal-400 mt-2 font-medium">Electrical & Electronics Engineer | Embedded Systems & Circuit Design</p>
-    <p class="text-slate-400 mt-3 max-w-2xl">
-      B.Tech EEE student at RGMCET (GPA: 7.5/10.0). Hands-on experience in microcontroller programming (8051, 8086), circuit simulation (Proteus, MATLAB), and industrial switchyard analysis.
-    </p>
-    <div class="mt-6 flex flex-wrap gap-4 text-sm font-semibold">
-      <a href="mailto:your-email@example.com" class="bg-teal-500 hover:bg-teal-600 text-slate-950 px-4 py-2 rounded-md transition">Contact Me</a>
-      <a href="https://linkedin.com" target="_blank" class="border border-slate-700 hover:border-slate-500 px-4 py-2 rounded-md transition text-slate-300">LinkedIn</a>
+<body class="selection:bg-cyan-500 selection:text-black">
+
+  <!-- Interactive PCB & Electric Trace Canvas (Background) -->
+  <canvas id="pcb-canvas" class="fixed inset-0 pointer-events-auto z-0"></canvas>
+
+  <!-- Cyber Grid Subtle Overlay -->
+  <div class="fixed inset-0 bg-[radial-gradient(#0e7490_1px,transparent_1px)] [background-size:32px_32px] opacity-15 pointer-events-none z-0"></div>
+
+  <!-- Main Viewport Container -->
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- Top Navigation Bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-cyan-500/20 px-6 py-3.5 transition-all duration-300">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        
+        <a href="#hero" class="flex items-center gap-2 group">
+          <div class="w-8 h-8 rounded bg-cyan-950 border border-cyan-400 flex items-center justify-center text-cyan-400 font-mono font-bold text-sm shadow-[0_0_12px_rgba(6,182,212,0.6)] group-hover:scale-105 transition-transform">
+            &mu;C
+          </div>
+          <span class="font-mono text-sm tracking-widest text-slate-200 group-hover:text-cyan-400 transition-colors uppercase font-semibold">
+            SIVA NANDA REDDY<span class="text-cyan-400 animate-pulse">_</span>
+          </span>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <div class="hidden md:flex items-center gap-7 text-xs font-mono font-medium tracking-wider text-slate-300">
+          <a href="#projects" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-cyan-400"></i>PROJECTS</a>
+          <a href="#internship" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-400"></i>APGENCO</a>
+          <a href="#skills" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-400"></i>SKILLS</a>
+          <a href="#leadership" class="hover:text-cyan-400 transition-colors flex items-center gap-1.5"><i data-lucide="award" class="w-3.5 h-3.5 text-purple-400"></i>LEADERSHIP</a>
+          <a href="#contact" class="px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 hover:bg-cyan-400 hover:text-black font-semibold transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+            CONNECT
+          </a>
+        </div>
+
+        <!-- Pulse Trigger Button (Canvas Interaction) -->
+        <button id="trigger-pulse-btn" class="md:hidden flex items-center gap-1 text-xs font-mono text-cyan-400 border border-cyan-500/40 px-2.5 py-1 rounded bg-slate-900">
+          <i data-lucide="activity" class="w-3.5 h-3.5 animate-spin"></i> PULSE
+        </button>
+
+      </div>
+    </nav>
+
+    <!-- Hero Section with Interactive Firmware Telemetry -->
+    <header id="hero" class="max-w-6xl mx-auto px-6 pt-16 pb-12 w-full grid lg:grid-cols-12 gap-10 items-center">
+      
+      <!-- Profile Header & Callouts -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/70 border border-cyan-400/40 text-cyan-300 text-xs font-mono">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>B.Tech EEE • RGMCET (GPA 7.5/10) • Kadapa, AP</span>
+        </div>
+
+        <div class="space-y-2">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            Siva Nanda Reddy <br/>
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 neon-text-cyan">
+              Ramireddy
+            </span>
+          </h1>
+          <p class="text-lg sm:text-xl font-mono text-slate-300 font-medium">
+            Electrical & Electronics Engineer <span class="text-cyan-400">|</span> Embedded Systems & Circuit Simulation
+          </p>
+        </div>
+
+        <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl">
+          Specializing in microcontroller architectures (<span class="text-slate-200 font-mono">8051, 8085, 8086</span>), hardware circuit design, and Proteus/Simulink modeling. Experienced in high-voltage 400 kV switchyard protocols from APGENCO and webmaster operations for IEEE IES.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs">
+          <a href="#projects" class="px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-teal-500 text-slate-950 font-bold hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] hover:scale-105 transition-all flex items-center gap-2">
+            <i data-lucide="layers" class="w-4 h-4"></i> EXPLORE BUILDS
+          </a>
+          <button onclick="triggerElectricBurst()" class="px-5 py-3 rounded-lg glass-panel text-cyan-300 border border-cyan-500/50 hover:bg-cyan-950/60 transition-all flex items-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i> INJECT VOLTAGE PULSE
+          </button>
+        </div>
+
+        <!-- Social Badges & Status -->
+        <div class="pt-4 flex flex-wrap gap-5 text-xs font-mono text-slate-400 items-center">
+          <div class="flex items-center gap-2">
+            <i data-lucide="phone" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>+91 83092 46760</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Kadapa, Andhra Pradesh</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Interactive Embedded 8051 Microcontroller Simulator Widget -->
+      <div class="lg:col-span-5">
+        <div class="glass-panel rounded-xl overflow-hidden border border-cyan-500/30 shadow-[0_0_30px_rgba(2,132,199,0.2)]">
+          
+          <!-- Terminal Title bar -->
+          <div class="bg-slate-950/90 px-4 py-2.5 border-b border-cyan-500/20 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+              <span class="text-xs font-mono text-cyan-300 ml-2 font-semibold">Keil_C51_Runtime.hex</span>
+            </div>
+            <span class="text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-700/50 px-2 py-0.5 rounded">11.0592 MHz</span>
+          </div>
+
+          <!-- Code Snippet Area -->
+          <div class="p-4 bg-slate-950/70 font-mono text-xs text-slate-300 space-y-1 overflow-x-auto leading-relaxed border-b border-slate-800">
+            <p><span class="text-purple-400">#include</span> <span class="text-emerald-300">&lt;reg51.h&gt;</span></p>
+            <p><span class="text-blue-400">sbit</span> PUMP_RELAY = <span class="text-amber-400">P1^0</span>;</p>
+            <p><span class="text-blue-400">sbit</span> SENSOR_HIGH = <span class="text-amber-400">P1^1</span>;</p>
+            <p class="text-slate-500 pt-1">// Auto-shutoff routine (SWPC)</p>
+            <p><span class="text-cyan-400">void</span> <span class="text-yellow-300">evaluate_tank</span>() {</p>
+            <p class="pl-4">if (SENSOR_HIGH == <span class="text-purple-400">1</span>) {</p>
+            <p class="pl-8 text-emerald-400">PUMP_RELAY = 0; <span class="text-slate-500">// Overflow cut</span></p>
+            <p class="pl-4">} else {</p>
+            <p class="pl-8 text-cyan-400">PUMP_RELAY = 1; <span class="text-slate-500">// Pumping active</span></p>
+            <p class="pl-4">}</p>
+            <p>}</p>
+          </div>
+
+          <!-- Live MCU Register & Pin State Control -->
+          <div class="p-4 bg-slate-900/80 space-y-3 font-mono text-xs">
+            <div class="text-[11px] text-slate-400 uppercase tracking-wider flex justify-between items-center">
+              <span>Interactive Port 1 Registers</span>
+              <span class="text-emerald-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> ONLINE</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Pin P1.0 -->
+              <div class="p-2.5 rounded bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div class="text-slate-400 text-[10px]">PIN P1.0 (Relay)</div>
+                  <div id="mcu-relay-status" class="text-emerald-400 font-bold">PUMP ACTIVE</div>
+                </div>
+                <div id="mcu-relay-indicator" class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]"></div>
+              </div>
+
+              <!-- Pin P1.1 Input Toggle -->
+              <div class="p-2.5 rounded bg-slate-950 border border-slate-800 flex items-center justify-between">
+                <div>
+                  <div class="text-slate-400 text-[10px]">PIN P1.1 (Level Sensor)</div>
+                  <div id="mcu-sensor-label" class="text-slate-300 font-bold">LOW (Dry)</div>
+                </div>
+                <button onclick="toggleMcuSensor()" class="text-[10px] px-2 py-1 rounded bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/40 transition">
+                  TOGGLE
+                </button>
+              </div>
+            </div>
+
+            <!-- Execution Log Output -->
+            <div id="mcu-log" class="text-[11px] text-slate-400 bg-slate-950 px-3 py-2 rounded border border-slate-800 truncate">
+              &gt; System standby. Water below threshold. Pump active.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </header>
+
+    <!-- SECTION: FEATURED ENGINEERING PROJECTS -->
+    <section id="projects" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-cyan-500/20 pb-4 gap-4">
+        <div>
+          <div class="text-xs font-mono text-cyan-400 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2.5 h-0.5 bg-cyan-400"></span> Prototyping & Simulations
+          </div>
+          <h2 class="text-3xl font-extrabold text-white mt-1">Featured Projects</h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400 max-w-sm">
+          Simulated and validated with Proteus, Circuit Designer IDE, and Keil C51.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        
+        <!-- PROJECT 1: SWPC -->
+        <div class="glass-panel rounded-xl p-7 border border-cyan-500/20 flex flex-col justify-between group hover:border-cyan-400/60 transition-all duration-300">
+          <div class="space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-cyan-950 border border-cyan-400/40 text-cyan-300 font-semibold">
+                EDA: Circuit Designer IDE
+              </span>
+              <span class="text-xs font-mono text-yellow-400 flex items-center gap-1">
+                <i data-lucide="award" class="w-3.5 h-3.5"></i> Presented @ SAMSLESHANA-2K26
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+              SWPC - Smart Water Pump Controller
+            </h3>
+
+            <p class="text-slate-300 text-sm leading-relaxed">
+              Designed and simulated an automated water level monitoring and pump control system. Engineered algorithmic shut-off routines to prevent tank overflows and eliminate motor dry-run burnouts.
+            </p>
+
+            <!-- Key Engineering Highlights -->
+            <ul class="space-y-2 text-xs text-slate-400 font-mono">
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i>
+                <span>Microcontroller logic control for agricultural & domestic sumps.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i>
+                <span>Optocoupler isolation & 5V/12V DC Relay switching simulation.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-cyan-400"></i>
+                <span>Technical paper presented at AITS Kadapa (Feb 2026).</span>
+              </li>
+            </ul>
+
+          </div>
+
+          <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+            <span class="text-xs font-mono text-slate-400">Domains: Embedded, Logic, Relays</span>
+            <button onclick="openModal('swpc-modal')" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 font-bold">
+              VIEW ARCHITECTURE <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- PROJECT 2: FSPG -->
+        <div class="glass-panel rounded-xl p-7 border border-cyan-500/20 flex flex-col justify-between group hover:border-emerald-400/60 transition-all duration-300">
+          <div class="space-y-4">
+            
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded text-[11px] font-mono bg-emerald-950 border border-emerald-400/40 text-emerald-300 font-semibold">
+                EDA: Proteus Design Suite
+              </span>
+              <span class="text-xs font-mono text-emerald-400 flex items-center gap-1">
+                <i data-lucide="leaf" class="w-3.5 h-3.5"></i> Clean Tech / Harvesting
+              </span>
+            </div>
+
+            <h3 class="text-2xl font-bold text-white group-hover:text-emerald-300 transition-colors">
+              FSPG - Foot Step Power Generator
+            </h3>
+
+            <p class="text-slate-300 text-sm leading-relaxed">
+              Green kinetic energy harvesting system designed and validated in Proteus. Models conversion of transient mechanical pressure steps into regulated, steady electrical charge stored in a DC battery bus.
+            </p>
+
+            <!-- Key Engineering Highlights -->
+            <ul class="space-y-2 text-xs text-slate-400 font-mono">
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Piezoelectric array & rack-pinion dynamo transduction model.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Full-bridge bridge rectifier, LC ripple filter, and linear DC regulation.</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Complete transient response & voltage regulation simulation.</span>
+              </li>
+            </ul>
+
+          </div>
+
+          <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+            <span class="text-xs font-mono text-slate-400">Domains: Power Electronics, Energy</span>
+            <button onclick="openModal('fspg-modal')" class="text-xs font-mono text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 font-bold">
+              VIEW CIRCUIT STAGES <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: INDUSTRIAL INTERNSHIP (APGENCO 400kV) -->
+    <section id="internship" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-cyan-500/20 pb-4 gap-4">
+        <div>
+          <div class="text-xs font-mono text-yellow-400 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2.5 h-0.5 bg-yellow-400"></span> Real-World Grid Infrastructure
+          </div>
+          <h2 class="text-3xl font-extrabold text-white mt-1">Industrial Internship</h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400">
+          Dr. MVR Rayalaseema Thermal Power Station (APGENCO)
+        </p>
+      </div>
+
+      <div class="glass-panel rounded-xl p-8 border border-yellow-500/30 space-y-8 relative overflow-hidden">
+        
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+          <div>
+            <h3 class="text-2xl font-bold text-white">400 kV Switchyard & Power Plant Operations Intern</h3>
+            <p class="text-yellow-400 font-mono text-sm mt-1">APGENCO - Dr. MVR RTPP (Rayalaseema Thermal Power Plant)</p>
+          </div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-yellow-950/60 border border-yellow-500/40 text-yellow-300 font-mono text-xs font-semibold">
+            <i data-lucide="shield-check" class="w-4 h-4"></i> HV GRID PROTECTION
+          </div>
+        </div>
+
+        <!-- Breakdown Grid -->
+        <div class="grid md:grid-cols-3 gap-6 font-mono">
+          
+          <div class="p-5 rounded-lg bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center gap-2 text-cyan-400 font-bold text-sm">
+              <i data-lucide="git-fork" class="w-4 h-4"></i>
+              <span>Single-Line Diagrams</span>
+            </div>
+            <p class="text-xs text-slate-400 font-sans leading-relaxed">
+              Analyzed complex 400 kV busbar configurations, isolating disconnectors, and single-line diagrams (SLD) governing generator step-up (GSU) transformer synchronization.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-lg bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center gap-2 text-yellow-400 font-bold text-sm">
+              <i data-lucide="zap-off" class="w-4 h-4"></i>
+              <span>Switchgear & Breakers</span>
+            </div>
+            <p class="text-xs text-slate-400 font-sans leading-relaxed">
+              Gained practical operation insights on SF6 (Sulfur Hexafluoride) and Vacuum Circuit Breakers (VCB), arc quenching mechanisms, and differential bus protection relays.
+            </p>
+          </div>
+
+          <div class="p-5 rounded-lg bg-slate-950/80 border border-slate-800 space-y-2">
+            <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+              <i data-lucide="monitor" class="w-4 h-4"></i>
+              <span>SCADA Control Room</span>
+            </div>
+            <p class="text-xs text-slate-400 font-sans leading-relaxed">
+              Studied centralized SCADA telemetric feedback, active/reactive load flow management, turbine generator excitation loops, and automated trip signals.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: TECHNICAL SKILL MATRIX -->
+    <section id="skills" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-cyan-500/20 pb-4 gap-4">
+        <div>
+          <div class="text-xs font-mono text-cyan-400 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2.5 h-0.5 bg-cyan-400"></span> Verified Capabilities
+          </div>
+          <h2 class="text-3xl font-extrabold text-white mt-1">Technical Skills & Tools</h2>
+        </div>
+        <p class="text-xs font-mono text-slate-400">
+          Hardware prototyping, microcontroller assembly, and embedded C
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <!-- Pillar 1: Embedded & Microcontrollers -->
+        <div class="glass-panel p-6 rounded-xl border border-cyan-500/20 space-y-4">
+          <div class="flex items-center gap-3 text-cyan-400">
+            <i data-lucide="cpu" class="w-6 h-6"></i>
+            <h3 class="font-mono font-bold text-base text-white">Microcontrollers</h3>
+          </div>
+          <div class="space-y-2 text-xs font-mono text-slate-300">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>8051 Family</span>
+              <span class="text-cyan-400">Advanced</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>8085 / 8086 MP</span>
+              <span class="text-cyan-400">Assembly</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Arduino IDE</span>
+              <span class="text-cyan-400">Prototyping</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Keil &micro;Vision</span>
+              <span class="text-cyan-400">Firmware</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 2: EDA & Simulation -->
+        <div class="glass-panel p-6 rounded-xl border border-cyan-500/20 space-y-4">
+          <div class="flex items-center gap-3 text-emerald-400">
+            <i data-lucide="activity" class="w-6 h-6"></i>
+            <h3 class="font-mono font-bold text-base text-white">EDA & Simulation</h3>
+          </div>
+          <div class="space-y-2 text-xs font-mono text-slate-300">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Proteus VSM</span>
+              <span class="text-emerald-400">Full Circuit</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>MATLAB & Simulink</span>
+              <span class="text-emerald-400">Models</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Multisim / Circuit IDE</span>
+              <span class="text-emerald-400">Schematic</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Proteus PCB Layout</span>
+              <span class="text-emerald-400">Routing</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 3: Programming -->
+        <div class="glass-panel p-6 rounded-xl border border-cyan-500/20 space-y-4">
+          <div class="flex items-center gap-3 text-yellow-400">
+            <i data-lucide="code" class="w-6 h-6"></i>
+            <h3 class="font-mono font-bold text-base text-white">Programming</h3>
+          </div>
+          <div class="space-y-2 text-xs font-mono text-slate-300">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Embedded C</span>
+              <span class="text-yellow-400">Core</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Python</span>
+              <span class="text-yellow-400">Data / Scripts</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>x86 / 8051 Assembly</span>
+              <span class="text-yellow-400">Registers</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800 flex justify-between">
+              <span>Web Technologies</span>
+              <span class="text-yellow-400">Webmaster</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillar 4: Engineering Domains -->
+        <div class="glass-panel p-6 rounded-xl border border-cyan-500/20 space-y-4">
+          <div class="flex items-center gap-3 text-purple-400">
+            <i data-lucide="radio" class="w-6 h-6"></i>
+            <h3 class="font-mono font-bold text-base text-white">Core Domains</h3>
+          </div>
+          <div class="space-y-2 text-xs font-mono text-slate-300">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">Digital Circuits & Logic</div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">Control Systems Design</div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">Power Electronics & Converters</div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800">Switchyard Protection</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: LEADERSHIP, SYMPOSIA & ACHIEVEMENTS -->
+    <section id="leadership" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-cyan-500/20 pb-4 gap-4">
+        <div>
+          <div class="text-xs font-mono text-purple-400 tracking-widest uppercase flex items-center gap-2">
+            <span class="w-2.5 h-0.5 bg-purple-400"></span> Professional Community
+          </div>
+          <h2 class="text-3xl font-extrabold text-white mt-1">Leadership & Honors</h2>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8 font-mono">
+        
+        <!-- IEEE Webmaster & Symposia -->
+        <div class="glass-panel rounded-xl p-6 border border-purple-500/30 space-y-4">
+          <div class="flex items-center gap-2 text-purple-400">
+            <i data-lucide="globe" class="w-5 h-5"></i>
+            <h3 class="text-lg font-bold text-white">Webmaster - IEEE IES Chapter</h3>
+          </div>
+          <p class="text-xs font-sans text-slate-300 leading-relaxed">
+            Administered and managed digital web assets for the IEEE Industry Electronics Society (IES) student chapter. Streamlined online registration architectures, payment confirmation workflows, and technical content publishing.
+          </p>
+          <div class="p-3 bg-slate-950 rounded border border-slate-800 text-xs text-slate-400">
+            <strong class="text-purple-300">Organized 10+ Technical Symposia:</strong> Coordinated faculty-student operations and event logistics for EEE RIPPLE and national-level events catering to 500+ participants.
+          </div>
+        </div>
+
+        <!-- Symposia Delegations & Achievements -->
+        <div class="glass-panel rounded-xl p-6 border border-cyan-500/30 space-y-3 text-xs">
+          <div class="flex items-center gap-2 text-cyan-400">
+            <i data-lucide="award" class="w-5 h-5"></i>
+            <h3 class="text-lg font-bold text-white">Symposia & Delegations</h3>
+          </div>
+          
+          <div class="space-y-2 pt-1 font-sans">
+            <div class="p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="font-bold text-cyan-300 font-mono">IEEE YESIST12 2024:</span>
+              <p class="text-slate-400 text-xs mt-0.5">Team Leader for "Project A" — Selected for Preliminary Round (Samriddhi / RGMCET).</p>
+            </div>
+
+            <div class="p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="font-bold text-emerald-300 font-mono">IEEE Anantapur Zonal Congress:</span>
+              <p class="text-slate-400 text-xs mt-0.5">Delegate @ UMANG '2K24 (G. Pulla Reddy Eng. College) & UMANG '2K23 (RGMCET).</p>
+            </div>
+
+            <div class="p-2.5 rounded bg-slate-950 border border-slate-800">
+              <span class="font-bold text-yellow-300 font-mono">Electric Vehicle Workshop:</span>
+              <p class="text-slate-400 text-xs mt-0.5">Completed hands-on workshop on Model-Based Development for Modern EVs.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION: CONTACT & CONNECT -->
+    <section id="contact" class="max-w-4xl mx-auto px-6 py-16 w-full text-center space-y-6">
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950 border border-cyan-400/40 text-cyan-300 text-xs font-mono">
+        <span>LET'S BUILD HARDWARE & SOFTWARE</span>
+      </div>
+
+      <h2 class="text-3xl sm:text-4xl font-extrabold text-white">
+        Open for Embedded & IoT Roles
+      </h2>
+      
+      <p class="text-slate-400 max-w-xl mx-auto text-sm">
+        Ready to contribute strong circuit design, firmware programming in C/Assembly, and field engineering aptitude to engineering teams.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-4 pt-4 font-mono text-xs">
+        <a href="mailto:ramireddysivanandareddy@gmail.com" class="px-6 py-3.5 rounded-lg bg-cyan-400 text-slate-950 font-bold hover:bg-cyan-300 transition-all flex items-center gap-2">
+          <i data-lucide="mail" class="w-4 h-4"></i> SEND EMAIL
+        </a>
+        <a href="tel:+918309246760" class="px-6 py-3.5 rounded-lg glass-panel text-slate-200 border border-slate-700 hover:border-cyan-400 transition-all flex items-center gap-2">
+          <i data-lucide="phone" class="w-4 h-4 text-emerald-400"></i> +91 83092 46760
+        </a>
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-slate-900 bg-slate-950/90 py-8 px-6 text-center text-xs font-mono text-slate-500">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <span>&copy; 2026 Siva Nanda Reddy Ramireddy. All rights reserved.</span>
+        <div class="flex items-center gap-4 text-slate-400">
+          <span>Kadapa, AP</span>
+          <span>•</span>
+          <span>RGMCET EEE</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL 1: SWPC ARCHITECTURE -->
+  <div id="swpc-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-950 border border-cyan-400 max-w-2xl w-full rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-cyan-300 font-mono">SWPC: Smart Water Pump Controller</h3>
+        <button onclick="closeModal('swpc-modal')" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs text-slate-300 font-mono leading-relaxed">
+        <p><strong class="text-white">Simulation Environment:</strong> Circuit Designer IDE / Proteus VSM</p>
+        <p><strong class="text-white">Operation Flow:</strong> Conductive sensor probes read fluid high/low status into an MCU input port. Digital debounce filters eliminate false triggers from fluid surface ripples. A transistorized relay driver activates an AC pump contactor while maintaining electrical isolation.</p>
+        <div class="p-3 bg-slate-900 rounded border border-slate-800 text-emerald-400 font-mono text-[11px]">
+          [Sensor: Low] -&gt; MCU P1.0 High -&gt; Opto-Coupler -&gt; Relay Latched -&gt; Motor RUN<br/>
+          [Sensor: High] -&gt; MCU P1.0 Low -&gt; Relay Cutoff -&gt; Overflow Halted
+        </div>
+        <p><strong class="text-white">Paper:</strong> Presented at <em>SAMSLESHANA-2K26</em> (AITS Kadapa, Feb 2026).</p>
+      </div>
+      <div class="text-right pt-2">
+        <button onclick="closeModal('swpc-modal')" class="px-4 py-1.5 rounded bg-cyan-950 border border-cyan-500/50 text-cyan-300 text-xs font-mono">CLOSE</button>
+      </div>
     </div>
-  </header>
+  </div>
 
-  <main class="max-w-4xl mx-auto px-6 py-12 space-y-16">
+  <!-- MODAL 2: FSPG CIRCUIT -->
+  <div id="fspg-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="glass-panel bg-slate-950 border border-emerald-400 max-w-2xl w-full rounded-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="text-lg font-bold text-emerald-300 font-mono">FSPG: Foot Step Power Generator</h3>
+        <button onclick="closeModal('fspg-modal')" class="text-slate-400 hover:text-white">&times;</button>
+      </div>
+      <div class="space-y-3 text-xs text-slate-300 font-mono leading-relaxed">
+        <p><strong class="text-white">Simulation Environment:</strong> Proteus Design Suite</p>
+        <p><strong class="text-white">Stages:</strong> Transduction stage uses piezoelectric / dynamo inputs to capture kinetic impacts. Alternating current spikes are converted via a Schottky full-bridge rectifier, smoothed with capacitor reservoirs, and clamped by a LM7805/DC-DC buck regulator to supply 5V DC for rechargeable battery banks.</p>
+        <div class="p-3 bg-slate-900 rounded border border-slate-800 text-yellow-400 font-mono text-[11px]">
+          Impact Force -&gt; AC Pulse -&gt; Bridge Rectifier -&gt; Filtering -&gt; DC Voltage Reg -&gt; Storage
+        </div>
+      </div>
+      <div class="text-right pt-2">
+        <button onclick="closeModal('fspg-modal')" class="px-4 py-1.5 rounded bg-emerald-950 border border-emerald-500/50 text-emerald-300 text-xs font-mono">CLOSE</button>
+      </div>
+    </div>
+  </div>
 
-    <!-- Projects Section -->
-    <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-teal-400 pl-3">Featured Projects</h2>
-      <div class="grid md:grid-cols-2 gap-6">
+  <!-- JAVASCRIPT: PCB SIMULATION CANVAS & INTERACTIVE STATE -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    /* ========================================================
+       1. INTERACTIVE PCB BACKGROUND CANVAS WITH ELECTRIC PULSES
+       ======================================================== */
+    const canvas = document.getElementById('pcb-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    let nodes = [];
+    let pulses = [];
+    let mouse = { x: null, y: null, maxDist: 180 };
+
+    function resizeCanvas() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initPcbNetwork();
+    }
+
+    // Circuit Nodes on a 90-degree Grid Layout
+    function initPcbNetwork() {
+      nodes = [];
+      const spacing = 80;
+      const cols = Math.ceil(width / spacing);
+      const rows = Math.ceil(height / spacing);
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          if (Math.random() > 0.65) {
+            nodes.push({
+              x: c * spacing + (Math.random() * 20 - 10),
+              y: r * spacing + (Math.random() * 20 - 10),
+              radius: Math.random() > 0.85 ? 3.5 : 2,
+              hasVia: Math.random() > 0.7,
+              connections: []
+            });
+          }
+        }
+      }
+
+      // Orthogonal trace connections (90 degree style)
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = Math.abs(nodes[i].x - nodes[j].x);
+          const dy = Math.abs(nodes[i].y - nodes[j].y);
+          if ((dx < 120 && dy < 40) || (dy < 120 && dx < 40)) {
+            nodes[i].connections.push(nodes[j]);
+          }
+        }
+      }
+    }
+
+    // Spark / Voltage Pulse Packet
+    class ElectricPulse {
+      constructor(startNode, endNode, speed = 2, color = '#00f2fe') {
+        this.start = startNode;
+        this.end = endNode;
+        this.progress = 0;
+        this.speed = speed;
+        this.color = color;
+      }
+
+      update() {
+        this.progress += this.speed * 0.01;
+      }
+
+      draw(context) {
+        const cx = this.start.x + (this.end.x - this.start.x) * this.progress;
+        const cy = this.start.y + (this.end.y - this.start.y) * this.progress;
+
+        context.beginPath();
+        context.arc(cx, cy, 2.5, 0, Math.PI * 2);
+        context.fillStyle = this.color;
+        context.shadowColor = this.color;
+        context.shadowBlur = 10;
+        context.fill();
+        context.shadowBlur = 0;
+      }
+    }
+
+    function spawnRandomPulse() {
+      if (nodes.length === 0) return;
+      const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
+      if (randomNode.connections.length > 0) {
+        const targetNode = randomNode.connections[Math.floor(Math.random() * randomNode.connections.length)];
+        const color = Math.random() > 0.3 ? '#00f2fe' : '#10b981';
+        pulses.push(new ElectricPulse(randomNode, targetNode, 2 + Math.random() * 2, color));
+      }
+    }
+
+    // Interactive burst on user action
+    window.triggerElectricBurst = function() {
+      for (let i = 0; i < 25; i++) {
+        spawnRandomPulse();
+      }
+    };
+
+    const triggerBtn = document.getElementById('trigger-pulse-btn');
+    if (triggerBtn) {
+      triggerBtn.addEventListener('click', triggerElectricBurst);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      if (Math.random() > 0.8) spawnRandomPulse();
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Animation Loop
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Draw Traces
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(14, 165, 233, 0.12)';
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        for (let j = 0; j < n1.connections.length; j++) {
+          const n2 = n1.connections[j];
+          ctx.beginPath();
+          ctx.moveTo(n1.x, n1.y);
+          // 90-degree orthogonal trace bend
+          ctx.lineTo(n2.x, n1.y);
+          ctx.lineTo(n2.x, n2.y);
+          ctx.stroke();
+        }
+      }
+
+      // Draw Solder Pads / Vias
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+
+        // Cursor attraction highlight
+        let dist = 999;
+        if (mouse.x !== null) {
+          const dx = mouse.x - n.x;
+          const dy = mouse.y - n.y;
+          dist = Math.sqrt(dx * dx + dy * dy);
+        }
+
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+
+        if (dist < mouse.maxDist) {
+          ctx.fillStyle = '#06b6d4';
+          ctx.shadowColor = '#06b6d4';
+          ctx.shadowBlur = 12;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        } else {
+          ctx.fillStyle = n.hasVia ? '#0284c7' : '#0369a1';
+          ctx.fill();
+        }
+      }
+
+      // Update & Draw Pulses
+      for (let i = pulses.length - 1; i >= 0; i--) {
+        const p = pulses[i];
+        p.update();
+        p.draw(ctx);
+        if (p.progress >= 1) {
+          pulses.splice(i, 1);
+        }
+      }
+
+      // Continuously maintain background signals
+      if (Math.random() < 0.08) {
+        spawnRandomPulse();
+      }
+
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    /* ========================================================
+       2. INTERACTIVE 8051 FIRMWARE CONTROLLER LOGIC
+       ======================================================== */
+    let isTankFull = false;
+
+    window.toggleMcuSensor = function() {
+      isTankFull = !isTankFull;
+      const relayText = document.getElementById('mcu-relay-status');
+      const relayDot = document.getElementById('mcu-relay-indicator');
+      const sensorLabel = document.getElementById('mcu-sensor-label');
+      const log = document.getElementById('mcu-log');
+
+      if (isTankFull) {
+        sensorLabel.textContent = "HIGH (Overflow Risk)";
+        sensorLabel.className = "text-amber-400 font-bold";
         
-        <!-- Project 1 -->
-        <div class="bg-slate-800/60 p-6 rounded-lg border border-slate-700">
-          <h3 class="text-xl font-semibold text-white">Smart Water Pump Controller (SWPC)</h3>
-          <p class="text-xs text-teal-400 mt-1 uppercase font-bold tracking-wider">Circuit Designer IDE • Microcontrollers</p>
-          <p class="text-slate-300 mt-3 text-sm">
-            Automated water management system designed to eliminate water overflow and optimize runtime using microcontroller logic. Presented at the National Symposium SAMSLESHANA-2K26.
-          </p>
-        </div>
-
-        <!-- Project 2 -->
-        <div class="bg-slate-800/60 p-6 rounded-lg border border-slate-700">
-          <h3 class="text-xl font-semibold text-white">Foot Step Power Generator (FSPG)</h3>
-          <p class="text-xs text-teal-400 mt-1 uppercase font-bold tracking-wider">Proteus Design Suite • Green Energy</p>
-          <p class="text-slate-300 mt-3 text-sm">
-            Kinetic energy harvesting system simulating conversion of mechanical motion into regulated electrical storage, complete with rectifier and filtering stages.
-          </p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Experience -->
-    <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-teal-400 pl-3">Experience & Leadership</h2>
-      <div class="space-y-6">
+        relayText.textContent = "RELAY OPEN (CUT)";
+        relayText.className = "text-red-400 font-bold";
+        relayDot.className = "w-3.5 h-3.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]";
         
-        <div class="bg-slate-800/30 p-5 rounded-md border-l-2 border-slate-600">
-          <div class="flex justify-between items-start flex-wrap">
-            <h3 class="font-semibold text-lg text-white">Engineering Intern</h3>
-            <span class="text-xs text-slate-400">APGENCO</span>
-          </div>
-          <p class="text-sm text-teal-400">Dr. MVR Rayalaseema Thermal Power Station</p>
-          <p class="text-slate-300 text-sm mt-2">
-            Analyzed SLDs of 400 kV switchyard, step-up transformers, vacuum/SF6 breakers, and busbar protection systems alongside SCADA-based control room workflows.
-          </p>
-        </div>
+        log.innerHTML = "&gt; SENSOR_HIGH Triggered (P1.1=1). Interrupt dispatched: P1.0 set LOW. Pump stopped.";
+      } else {
+        sensorLabel.textContent = "LOW (Dry)";
+        sensorLabel.className = "text-slate-300 font-bold";
+        
+        relayText.textContent = "PUMP ACTIVE";
+        relayText.className = "text-emerald-400 font-bold";
+        relayDot.className = "w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-[0_0_10px_#10b981]";
+        
+        log.innerHTML = "&gt; Water level depleted (P1.1=0). P1.0 toggled HIGH. Pumping initiated.";
+      }
+      triggerElectricBurst();
+    };
 
-        <div class="bg-slate-800/30 p-5 rounded-md border-l-2 border-slate-600">
-          <div class="flex justify-between items-start flex-wrap">
-            <h3 class="font-semibold text-lg text-white">Webmaster & Symposia Lead</h3>
-            <span class="text-xs text-slate-400">IEEE IES Chapter & RGMCET</span>
-          </div>
-          <p class="text-slate-300 text-sm mt-2">
-            Managed web assets and event portals for IEEE IES. Organized technical symposia including EEE RIPPLE for 500+ attendees.
-          </p>
-        </div>
+    /* ========================================================
+       3. MODAL HANDLERS
+       ======================================================== */
+    window.openModal = function(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden');
+    };
 
-      </div>
-    </section>
-
-    <!-- Skills -->
-    <section>
-      <h2 class="text-2xl font-bold text-white mb-6 border-l-4 border-teal-400 pl-3">Technical Toolkit</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-        <div class="p-3 bg-slate-800 rounded border border-slate-700">
-          <p class="text-xs text-slate-400 uppercase font-semibold">Languages</p>
-          <p class="mt-1 font-medium text-slate-200">C, Python, Assembly</p>
-        </div>
-        <div class="p-3 bg-slate-800 rounded border border-slate-700">
-          <p class="text-xs text-slate-400 uppercase font-semibold">Hardware</p>
-          <p class="mt-1 font-medium text-slate-200">8051, 8085, 8086, Arduino</p>
-        </div>
-        <div class="p-3 bg-slate-800 rounded border border-slate-700">
-          <p class="text-xs text-slate-400 uppercase font-semibold">EDA & Simulation</p>
-          <p class="mt-1 font-medium text-slate-200">Proteus, MATLAB, Simulink</p>
-        </div>
-        <div class="p-3 bg-slate-800 rounded border border-slate-700">
-          <p class="text-xs text-slate-400 uppercase font-semibold">IDE & Firmware</p>
-          <p class="mt-1 font-medium text-slate-200">Keil uVision, Circuit Designer</p>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="text-center py-8 border-t border-slate-800 text-xs text-slate-500">
-    © 2026 Siva Nanda Reddy Ramireddy • Hosted on GitHub Pages
-  </footer>
-
+    window.closeModal = function(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    };
+  </script>
 </body>
 </html>
