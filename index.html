@@ -1,1002 +1,165 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Siva Nanda Reddy Ramireddy | Embedded Systems & EEE Portfolio</title>
-  
-  <!-- Tailwind CSS & Lucide Icons -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cursor Animation Showcase Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Times New Roman"', 'Times', 'serif'],
-            mono: ['"Times New Roman"', 'Times', 'serif'],
-            serif: ['"Times New Roman"', 'Times', 'serif']
-          },
-          colors: {
-            circuit: {
-              bg: '#f8fafc',
-              card: 'rgba(255, 255, 255, 0.85)',
-              border: '#0284c7',
-              glow: '#0284c7',
-              emerald: '#059669',
-              amber: '#d97706',
-            }
-          }
-        }
-      }
-    }
-  </script>
-
   <style>
-    /* Global Times New Roman Enforcement */
-    * {
-      font-family: "Times New Roman", Times, serif !important;
-    }
-
-    body {
-      background-color: #f8fafc;
-      color: #0f172a;
-      overflow-x: hidden;
-    }
-    
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(226, 232, 240, 0.9);
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
-    }
-    
-    .glass-panel:hover {
-      border-color: rgba(14, 165, 233, 0.5);
-      box-shadow: 0 10px 25px -5px rgba(14, 165, 233, 0.15);
-    }
-
-    .neon-text-cyan {
-      text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
-    }
-
-    /* Custom Connecting-the-Dots Overlay Canvas */
-    #cursor-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 7px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #94a3b8;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #64748b;
-    }
+    body { font-family: 'Times New Roman', Times, serif; background: #0f172a; color: #f8fafc; }
+    canvas { background: #090d16; border-radius: 0.75rem; }
   </style>
 </head>
+<body class="p-6 flex flex-col items-center min-h-screen justify-center">
 
-<body class="selection:bg-sky-200 selection:text-slate-900">
+  <div class="max-w-3xl w-full space-y-4">
+    <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+      <h1 class="text-2xl font-bold text-sky-400">Interactive Cursor Animation Preview</h1>
+      <span class="text-xs bg-slate-800 text-slate-300 px-3 py-1 rounded-full border border-slate-600">Simulated Playback</span>
+    </div>
 
-  <!-- Interactive Connecting-the-Dots Cursor Canvas -->
-  <canvas id="cursor-canvas"></canvas>
+    <!-- Mode Selector Controls -->
+    <div class="flex flex-wrap gap-2 text-sm font-semibold">
+      <button onclick="setMode('constellation')" id="btn-constellation" class="px-4 py-1.5 rounded bg-sky-600 text-white">1. Constellation / Dot Connect</button>
+      <button onclick="setMode('reticle')" id="btn-reticle" class="px-4 py-1.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700">2. Rotating Reticle</button>
+      <button onclick="setMode('magnetic')" id="btn-magnetic" class="px-4 py-1.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700">3. Magnetic Blob / Trailer</button>
+    </div>
 
-  <!-- Interactive PCB & Electric Trace Canvas (Bright Background) -->
-  <canvas id="pcb-canvas" class="fixed inset-0 pointer-events-auto z-0 bg-slate-50"></canvas>
-
-  <!-- Subtle Light Grid Overlay -->
-  <div class="fixed inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:28px_28px] opacity-60 pointer-events-none z-0"></div>
-
-  <!-- Main Viewport Container -->
-  <div class="relative z-10 flex flex-col min-h-screen">
-
-    <!-- Top Navigation Bar -->
-    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/80 border-b border-slate-200 px-6 py-3.5 transition-all duration-300">
-      <div class="max-w-6xl mx-auto flex items-center justify-between">
-        
-        <a href="#hero" class="flex items-center gap-2 group">
-          <div class="w-8 h-8 rounded bg-sky-50 border border-sky-400 flex items-center justify-center text-sky-600 font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
-            &mu;C
-          </div>
-          <span class="text-sm tracking-widest text-slate-800 group-hover:text-sky-600 transition-colors uppercase font-semibold">
-            SIVA NANDA REDDY<span class="text-sky-600 animate-pulse">_</span>
-          </span>
-        </a>
-
-        <!-- Desktop Navigation Links -->
-        <div class="hidden md:flex items-center gap-7 text-xs font-medium tracking-wider text-slate-600">
-          <a href="#projects" class="hover:text-sky-600 transition-colors flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-sky-500"></i>PROJECTS</a>
-          <a href="#internship" class="hover:text-sky-600 transition-colors flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>APGENCO</a>
-          <a href="#skills" class="hover:text-sky-600 transition-colors flex items-center gap-1.5"><i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-600"></i>SKILLS</a>
-          <a href="#leadership" class="hover:text-sky-600 transition-colors flex items-center gap-1.5"><i data-lucide="award" class="w-3.5 h-3.5 text-purple-600"></i>LEADERSHIP</a>
-          <a href="#contact" class="px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-300 text-sky-700 hover:bg-sky-600 hover:text-white font-semibold transition-all shadow-sm">
-            CONNECT
-          </a>
-        </div>
-
-        <!-- Pulse Trigger Button -->
-        <button id="trigger-pulse-btn" class="md:hidden flex items-center gap-1 text-xs text-sky-700 border border-sky-300 px-2.5 py-1 rounded bg-white shadow-sm">
-          <i data-lucide="activity" class="w-3.5 h-3.5 animate-spin"></i> PULSE
-        </button>
-
-      </div>
-    </nav>
-
-    <!-- Hero Section with Interactive Firmware Telemetry -->
-    <header id="hero" class="max-w-6xl mx-auto px-6 pt-16 pb-12 w-full grid lg:grid-cols-12 gap-10 items-center">
-      
-      <!-- Profile Header & Callouts -->
-      <div class="lg:col-span-7 space-y-6">
-        
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <span>B.Tech EEE • RGMCET (GPA 7.5/10) • Kadapa, AP</span>
-        </div>
-
-        <div class="space-y-2">
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
-            Siva Nanda Reddy <br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-sky-600 via-teal-600 to-emerald-600 neon-text-cyan">
-              Ramireddy
-            </span>
-          </h1>
-          <p class="text-lg sm:text-xl text-slate-700 font-medium">
-            Electrical & Electronics Engineer <span class="text-sky-600">|</span> Embedded Systems & Circuit Simulation
-          </p>
-        </div>
-
-        <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl">
-          Specializing in microcontroller architectures (<span class="text-slate-800 font-semibold">8051, 8085, 8086</span>), hardware circuit design, and Proteus/Simulink modeling. Experienced in high-voltage 400 kV switchyard protocols from APGENCO and webmaster operations for IEEE IES.
-        </p>
-
-        <!-- CTA Action Buttons -->
-        <div class="flex flex-wrap items-center gap-4 pt-2 text-xs">
-          <a href="#projects" class="px-6 py-3 rounded-lg bg-sky-600 text-white font-bold hover:bg-sky-500 shadow-md transition-all flex items-center gap-2">
-            <i data-lucide="layers" class="w-4 h-4"></i> EXPLORE BUILDS
-          </a>
-          <button onclick="triggerElectricBurst()" class="px-5 py-3 rounded-lg glass-panel text-sky-700 border border-slate-300 hover:bg-sky-50 transition-all flex items-center gap-2 font-semibold">
-            <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> INJECT VOLTAGE PULSE
-          </button>
-        </div>
-
-        <!-- Social Badges & Status -->
-        <div class="pt-4 flex flex-wrap gap-5 text-xs text-slate-500 items-center">
-          <div class="flex items-center gap-2">
-            <i data-lucide="phone" class="w-3.5 h-3.5 text-sky-600"></i>
-            <span>+91 83092 46760</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600"></i>
-            <span>Kadapa, Andhra Pradesh</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Interactive Embedded 8051 Microcontroller Simulator Widget -->
-      <div class="lg:col-span-5">
-        <div class="glass-panel rounded-xl overflow-hidden border border-slate-200 shadow-lg">
-          
-          <!-- Terminal Title bar -->
-          <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-white">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
-              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
-              <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
-              <span class="text-xs text-sky-300 ml-2 font-semibold">Keil_C51_Runtime.hex</span>
-            </div>
-            <span class="text-[10px] bg-sky-950 text-sky-300 border border-sky-700/50 px-2 py-0.5 rounded">11.0592 MHz</span>
-          </div>
-
-          <!-- Code Snippet Area -->
-          <div class="p-4 bg-slate-950 text-xs text-slate-300 space-y-1 overflow-x-auto leading-relaxed border-b border-slate-800">
-            <p><span class="text-purple-400">#include</span> <span class="text-emerald-300">&lt;reg51.h&gt;</span></p>
-            <p><span class="text-blue-400">sbit</span> PUMP_RELAY = <span class="text-amber-400">P1^0</span>;</p>
-            <p><span class="text-blue-400">sbit</span> SENSOR_HIGH = <span class="text-amber-400">P1^1</span>;</p>
-            <p class="text-slate-500 pt-1">// Auto-shutoff routine (SWPC)</p>
-            <p><span class="text-cyan-400">void</span> <span class="text-yellow-300">evaluate_tank</span>() {</p>
-            <p class="pl-4">if (SENSOR_HIGH == <span class="text-purple-400">1</span>) {</p>
-            <p class="pl-8 text-emerald-400">PUMP_RELAY = 0; <span class="text-slate-500">// Overflow cut</span></p>
-            <p class="pl-4">} else {</p>
-            <p class="pl-8 text-cyan-400">PUMP_RELAY = 1; <span class="text-slate-500">// Pumping active</span></p>
-            <p class="pl-4">}</p>
-            <p>}</p>
-          </div>
-
-          <!-- Live MCU Register & Pin State Control -->
-          <div class="p-4 bg-white space-y-3 text-xs border-t border-slate-100">
-            <div class="text-[11px] text-slate-500 uppercase tracking-wider flex justify-between items-center font-semibold">
-              <span>Interactive Port 1 Registers</span>
-              <span class="text-emerald-600 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span> ONLINE</span>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-3">
-              <!-- Pin P1.0 -->
-              <div class="p-2.5 rounded bg-slate-50 border border-slate-200 flex items-center justify-between">
-                <div>
-                  <div class="text-slate-500 text-[10px]">PIN P1.0 (Relay)</div>
-                  <div id="mcu-relay-status" class="text-emerald-600 font-bold">PUMP ACTIVE</div>
-                </div>
-                <div id="mcu-relay-indicator" class="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm"></div>
-              </div>
-
-              <!-- Pin P1.1 Input Toggle -->
-              <div class="p-2.5 rounded bg-slate-50 border border-slate-200 flex items-center justify-between">
-                <div>
-                  <div class="text-slate-500 text-[10px]">PIN P1.1 (Level Sensor)</div>
-                  <div id="mcu-sensor-label" class="text-slate-700 font-bold">LOW (Dry)</div>
-                </div>
-                <button onclick="toggleMcuSensor()" class="text-[10px] px-2 py-1 rounded bg-sky-100 hover:bg-sky-200 text-sky-800 border border-sky-300 font-semibold transition">
-                  TOGGLE
-                </button>
-              </div>
-            </div>
-
-            <!-- Execution Log Output -->
-            <div id="mcu-log" class="text-[11px] text-slate-600 bg-slate-50 px-3 py-2 rounded border border-slate-200 truncate">
-              &gt; System standby. Water below threshold. Pump active.
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-    </header>
-
-    <!-- SECTION: FEATURED ENGINEERING PROJECTS -->
-    <section id="projects" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
-        <div>
-          <div class="text-xs text-sky-600 tracking-widest uppercase flex items-center gap-2 font-bold">
-            <span class="w-2.5 h-0.5 bg-sky-600"></span> Prototyping & Simulations
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Featured Projects</h2>
-        </div>
-        <p class="text-xs text-slate-500 max-w-sm">
-          Simulated and validated with Proteus, Circuit Designer IDE, and Keil C51.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-8">
-        
-        <!-- PROJECT 1: SWPC -->
-        <div class="glass-panel rounded-xl p-7 flex flex-col justify-between group hover:border-sky-400 transition-all duration-300">
-          <div class="space-y-4">
-            
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded text-[11px] bg-sky-50 border border-sky-200 text-sky-700 font-semibold">
-                EDA: Circuit Designer IDE
-              </span>
-              <span class="text-xs text-amber-600 font-semibold flex items-center gap-1">
-                <i data-lucide="award" class="w-3.5 h-3.5"></i> Presented @ SAMSLESHANA-2K26
-              </span>
-            </div>
-
-            <h3 class="text-2xl font-bold text-slate-900 group-hover:text-sky-600 transition-colors">
-              SWPC - Smart Water Pump Controller
-            </h3>
-
-            <p class="text-slate-600 text-sm leading-relaxed">
-              Designed and simulated an automated water level monitoring and pump control system. Engineered algorithmic shut-off routines to prevent tank overflows and eliminate motor dry-run burnouts.
-            </p>
-
-            <!-- Key Engineering Highlights -->
-            <ul class="space-y-2 text-xs text-slate-600">
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-600"></i>
-                <span>Microcontroller logic control for agricultural & domestic sumps.</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-600"></i>
-                <span>Optocoupler isolation & 5V/12V DC Relay switching simulation.</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-sky-600"></i>
-                <span>Technical paper presented at AITS Kadapa (Feb 2026).</span>
-              </li>
-            </ul>
-
-          </div>
-
-          <div class="pt-6 border-t border-slate-200 mt-6 flex items-center justify-between">
-            <span class="text-xs text-slate-500">Domains: Embedded, Logic, Relays</span>
-            <button onclick="openModal('swpc-modal')" class="text-xs text-sky-600 hover:text-sky-800 flex items-center gap-1.5 font-bold">
-              VIEW ARCHITECTURE <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- PROJECT 2: FSPG -->
-        <div class="glass-panel rounded-xl p-7 flex flex-col justify-between group hover:border-emerald-500 transition-all duration-300">
-          <div class="space-y-4">
-            
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-1 rounded text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-700 font-semibold">
-                EDA: Proteus Design Suite
-              </span>
-              <span class="text-xs text-emerald-600 font-semibold flex items-center gap-1">
-                <i data-lucide="leaf" class="w-3.5 h-3.5"></i> Clean Tech / Harvesting
-              </span>
-            </div>
-
-            <h3 class="text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-              FSPG - Foot Step Power Generator
-            </h3>
-
-            <p class="text-slate-600 text-sm leading-relaxed">
-              Green kinetic energy harvesting system designed and validated in Proteus. Models conversion of transient mechanical pressure steps into regulated, steady electrical charge stored in a DC battery bus.
-            </p>
-
-            <!-- Key Engineering Highlights -->
-            <ul class="space-y-2 text-xs text-slate-600">
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                <span>Piezoelectric array & mechanical transduction model.</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                <span>Full-bridge rectifier, LC ripple filter, and linear DC regulation.</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                <span>Complete transient response & voltage regulation simulation.</span>
-              </li>
-            </ul>
-
-          </div>
-
-          <div class="pt-6 border-t border-slate-200 mt-6 flex items-center justify-between">
-            <span class="text-xs text-slate-500">Domains: Power Electronics, Energy</span>
-            <button onclick="openModal('fspg-modal')" class="text-xs text-emerald-600 hover:text-emerald-800 flex items-center gap-1.5 font-bold">
-              VIEW CIRCUIT STAGES <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION: INDUSTRIAL INTERNSHIP (APGENCO 400kV) -->
-    <section id="internship" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
-        <div>
-          <div class="text-xs text-amber-600 tracking-widest uppercase flex items-center gap-2 font-bold">
-            <span class="w-2.5 h-0.5 bg-amber-500"></span> Real-World Grid Infrastructure
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Industrial Internship</h2>
-        </div>
-        <p class="text-xs text-slate-500">
-          Dr. MVR Rayalaseema Thermal Power Station (APGENCO)
-        </p>
-      </div>
-
-      <div class="glass-panel rounded-xl p-8 space-y-8 relative overflow-hidden">
-        
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-6">
-          <div>
-            <h3 class="text-2xl font-bold text-slate-900">400 kV Switchyard & Power Plant Operations Intern</h3>
-            <p class="text-amber-600 text-sm mt-1 font-semibold">APGENCO - Dr. MVR RTPP (Rayalaseema Thermal Power Plant)</p>
-          </div>
-          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold">
-            <i data-lucide="shield-check" class="w-4 h-4"></i> HV GRID PROTECTION
-          </div>
-        </div>
-
-        <!-- Breakdown Grid -->
-        <div class="grid md:grid-cols-3 gap-6">
-          
-          <div class="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-            <div class="flex items-center gap-2 text-sky-700 font-bold text-sm">
-              <i data-lucide="git-fork" class="w-4 h-4"></i>
-              <span>Single-Line Diagrams</span>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Analyzed complex 400 kV busbar configurations, isolating disconnectors, and single-line diagrams (SLD) governing generator step-up transformer synchronization.
-            </p>
-          </div>
-
-          <div class="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-            <div class="flex items-center gap-2 text-amber-700 font-bold text-sm">
-              <i data-lucide="zap-off" class="w-4 h-4"></i>
-              <span>Switchgear & Breakers</span>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Gained practical operation insights on SF6 (Sulfur Hexafluoride) and Vacuum Circuit Breakers (VCB), arc quenching mechanisms, and differential bus protection relays.
-            </p>
-          </div>
-
-          <div class="p-5 rounded-lg bg-slate-50 border border-slate-200 space-y-2">
-            <div class="flex items-center gap-2 text-emerald-700 font-bold text-sm">
-              <i data-lucide="monitor" class="w-4 h-4"></i>
-              <span>SCADA Control Room</span>
-            </div>
-            <p class="text-xs text-slate-600 leading-relaxed">
-              Studied centralized SCADA telemetric feedback, active/reactive load flow management, turbine generator excitation loops, and automated trip signals.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION: TECHNICAL SKILL MATRIX -->
-    <section id="skills" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
-        <div>
-          <div class="text-xs text-sky-600 tracking-widest uppercase flex items-center gap-2 font-bold">
-            <span class="w-2.5 h-0.5 bg-sky-600"></span> Verified Capabilities
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Technical Skills & Tools</h2>
-        </div>
-        <p class="text-xs text-slate-500">
-          Hardware prototyping, microcontroller assembly, and embedded C
-        </p>
-      </div>
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        
-        <!-- Pillar 1: Embedded & Microcontrollers -->
-        <div class="glass-panel p-6 rounded-xl space-y-4">
-          <div class="flex items-center gap-3 text-sky-600">
-            <i data-lucide="cpu" class="w-6 h-6"></i>
-            <h3 class="font-bold text-base text-slate-900">Microcontrollers</h3>
-          </div>
-          <div class="space-y-2 text-xs text-slate-700">
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>8051 Family</span>
-              <span class="text-sky-600 font-semibold">Proficient</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>8085 / 8086 MP</span>
-              <span class="text-sky-600 font-semibold">Assembly</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Arduino IDE</span>
-              <span class="text-sky-600 font-semibold">Prototyping</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Keil &micro;Vision</span>
-              <span class="text-sky-600 font-semibold">Firmware</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pillar 2: EDA & Simulation -->
-        <div class="glass-panel p-6 rounded-xl space-y-4">
-          <div class="flex items-center gap-3 text-emerald-600">
-            <i data-lucide="activity" class="w-6 h-6"></i>
-            <h3 class="font-bold text-base text-slate-900">EDA & Simulation</h3>
-          </div>
-          <div class="space-y-2 text-xs text-slate-700">
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Proteus VSM</span>
-              <span class="text-emerald-600 font-semibold">Circuit Design</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>MATLAB & Simulink</span>
-              <span class="text-emerald-600 font-semibold">Models</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Multisim / Circuit IDE</span>
-              <span class="text-emerald-600 font-semibold">Schematics</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Circuit Prototyping</span>
-              <span class="text-emerald-600 font-semibold">Validation</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pillar 3: Programming -->
-        <div class="glass-panel p-6 rounded-xl space-y-4">
-          <div class="flex items-center gap-3 text-amber-600">
-            <i data-lucide="code" class="w-6 h-6"></i>
-            <h3 class="font-bold text-base text-slate-900">Programming</h3>
-          </div>
-          <div class="space-y-2 text-xs text-slate-700">
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>C Programming</span>
-              <span class="text-amber-600 font-semibold">Core</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Python</span>
-              <span class="text-amber-600 font-semibold">Scripts</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Assembly Language</span>
-              <span class="text-amber-600 font-semibold">Registers</span>
-            </div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200 flex justify-between">
-              <span>Web Technologies</span>
-              <span class="text-amber-600 font-semibold">Webmaster</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Pillar 4: Engineering Domains -->
-        <div class="glass-panel p-6 rounded-xl space-y-4">
-          <div class="flex items-center gap-3 text-purple-600">
-            <i data-lucide="radio" class="w-6 h-6"></i>
-            <h3 class="font-bold text-base text-slate-900">Core Domains</h3>
-          </div>
-          <div class="space-y-2 text-xs text-slate-700">
-            <div class="p-2 rounded bg-slate-50 border border-slate-200">Digital Circuits & Logic</div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200">Control Systems Design</div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200">Power Electronics & Converters</div>
-            <div class="p-2 rounded bg-slate-50 border border-slate-200">Switchyard Protection</div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION: LEADERSHIP, SYMPOSIA & ACHIEVEMENTS -->
-    <section id="leadership" class="max-w-6xl mx-auto px-6 py-16 w-full space-y-10">
-      
-      <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-slate-200 pb-4 gap-4">
-        <div>
-          <div class="text-xs text-purple-600 tracking-widest uppercase flex items-center gap-2 font-bold">
-            <span class="w-2.5 h-0.5 bg-purple-600"></span> Professional Community
-          </div>
-          <h2 class="text-3xl font-extrabold text-slate-900 mt-1">Leadership & Honors</h2>
-        </div>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-8">
-        
-        <!-- IEEE Webmaster & Symposia -->
-        <div class="glass-panel rounded-xl p-6 space-y-4">
-          <div class="flex items-center gap-2 text-purple-600">
-            <i data-lucide="globe" class="w-5 h-5"></i>
-            <h3 class="text-lg font-bold text-slate-900">Webmaster - IEEE IES Chapter</h3>
-          </div>
-          <p class="text-xs text-slate-600 leading-relaxed">
-            Administered and managed digital web assets for the IEEE Industry Electronics Society (IES) student chapter. Streamlined online registration architectures, event notifications, and technical content publishing.
-          </p>
-          <div class="p-3 bg-slate-50 rounded border border-slate-200 text-xs text-slate-600">
-            <strong class="text-purple-700">Organized 10+ Technical Symposia:</strong> Coordinated operations, budgeting, and event logistics for EEE RIPPLE and national-level events with 500+ participants.
-          </div>
-        </div>
-
-        <!-- Symposia Delegations & Achievements -->
-        <div class="glass-panel rounded-xl p-6 space-y-3 text-xs">
-          <div class="flex items-center gap-2 text-sky-600">
-            <i data-lucide="award" class="w-5 h-5"></i>
-            <h3 class="text-lg font-bold text-slate-900">Symposia & Delegations</h3>
-          </div>
-          
-          <div class="space-y-2 pt-1">
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
-              <span class="font-bold text-sky-800">IEEE YESIST12 2024:</span>
-              <p class="text-slate-600 text-xs mt-0.5">Team Leader for "Project A" — Selected for Preliminary Round (Samriddhi / RGMCET).</p>
-            </div>
-
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
-              <span class="font-bold text-emerald-800">IEEE Anantapur Zonal Congress:</span>
-              <p class="text-slate-600 text-xs mt-0.5">Delegate @ UMANG '2K24 (G. Pulla Reddy Eng. College) & UMANG '2K23 (RGMCET).</p>
-            </div>
-
-            <div class="p-2.5 rounded bg-slate-50 border border-slate-200">
-              <span class="font-bold text-amber-800">Modern Electric Vehicles Workshop:</span>
-              <p class="text-slate-600 text-xs mt-0.5">Completed hands-on workshop on Model-Based Development for Electric Vehicles.</p>
-            </div>
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SECTION: CONTACT & CONNECT -->
-    <section id="contact" class="max-w-4xl mx-auto px-6 py-16 w-full text-center space-y-6">
-      
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-800 text-xs font-semibold">
-        <span>LET'S BUILD HARDWARE & SOFTWARE</span>
-      </div>
-
-      <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900">
-        Open for Embedded & IoT Roles
-      </h2>
-      
-      <p class="text-slate-600 max-w-xl mx-auto text-sm leading-relaxed">
-        Ready to contribute strong circuit design, firmware programming in C/Assembly, and field engineering aptitude to engineering teams.
-      </p>
-
-      <div class="flex flex-wrap justify-center gap-4 pt-4 text-xs">
-        <a href="mailto:ramireddysivanandareddy@gmail.com" class="px-6 py-3.5 rounded-lg bg-sky-600 text-white font-bold hover:bg-sky-500 transition-all flex items-center gap-2 shadow-sm">
-          <i data-lucide="mail" class="w-4 h-4"></i> SEND EMAIL
-        </a>
-        <a href="tel:+918309246760" class="px-6 py-3.5 rounded-lg glass-panel text-slate-800 border border-slate-300 hover:border-sky-500 transition-all flex items-center gap-2 font-semibold">
-          <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i> +91 83092 46760
-        </a>
-      </div>
-
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="mt-auto border-t border-slate-200 bg-white/80 py-8 px-6 text-center text-xs text-slate-500">
-      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-        <span>&copy; 2026 Siva Nanda Reddy Ramireddy. All rights reserved.</span>
-        <div class="flex items-center gap-4 text-slate-500">
-          <span>Kadapa, AP</span>
-          <span>•</span>
-          <span>RGMCET EEE</span>
-        </div>
-      </div>
-    </footer>
-
-  </div>
-
-  <!-- MODAL 1: SWPC ARCHITECTURE -->
-  <div id="swpc-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="glass-panel bg-white border border-sky-400 max-w-2xl w-full rounded-2xl p-6 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h3 class="text-lg font-bold text-sky-800">SWPC: Smart Water Pump Controller</h3>
-        <button onclick="closeModal('swpc-modal')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
-      </div>
-      <div class="space-y-3 text-xs text-slate-700 leading-relaxed">
-        <p><strong class="text-slate-900">Simulation Environment:</strong> Circuit Designer IDE / Proteus VSM</p>
-        <p><strong class="text-slate-900">Operation Flow:</strong> Conductive sensor probes read fluid high/low status into an MCU input port. Digital debounce filters eliminate false triggers from fluid ripples. A transistorized relay driver activates an AC pump contactor while maintaining electrical isolation.</p>
-        <div class="p-3 bg-slate-50 rounded border border-slate-200 text-emerald-700 text-[11px]">
-          [Sensor: Low] -&gt; MCU P1.0 High -&gt; Opto-Coupler -&gt; Relay Latched -&gt; Motor RUN<br/>
-          [Sensor: High] -&gt; MCU P1.0 Low -&gt; Relay Cutoff -&gt; Overflow Halted
-        </div>
-        <p><strong class="text-slate-900">Paper Presentation:</strong> Presented at <em>SAMSLESHANA-2K26</em> (AITS Kadapa, Feb 2026).</p>
-      </div>
-      <div class="text-right pt-2">
-        <button onclick="closeModal('swpc-modal')" class="px-4 py-1.5 rounded bg-sky-50 border border-sky-300 text-sky-800 text-xs font-semibold">CLOSE</button>
+    <!-- Simulation Canvas Container -->
+    <div class="relative">
+      <canvas id="preview-stage" width="760" height="420" class="w-full border border-slate-700 shadow-2xl"></canvas>
+      <div id="status-tag" class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur px-3 py-1.5 rounded border border-slate-700 text-xs text-slate-300">
+        Move your mouse over the screen to interact
       </div>
     </div>
   </div>
 
-  <!-- MODAL 2: FSPG CIRCUIT -->
-  <div id="fspg-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="glass-panel bg-white border border-emerald-400 max-w-2xl w-full rounded-2xl p-6 space-y-4 shadow-2xl">
-      <div class="flex items-center justify-between border-b border-slate-200 pb-3">
-        <h3 class="text-lg font-bold text-emerald-800">FSPG: Foot Step Power Generator</h3>
-        <button onclick="closeModal('fspg-modal')" class="text-slate-400 hover:text-slate-700 text-xl font-bold">&times;</button>
-      </div>
-      <div class="space-y-3 text-xs text-slate-700 leading-relaxed">
-        <p><strong class="text-slate-900">Simulation Environment:</strong> Proteus Design Suite</p>
-        <p><strong class="text-slate-900">Stages:</strong> Transduction stage uses piezoelectric inputs to capture kinetic impacts. Alternating current spikes are converted via a full-bridge rectifier, smoothed with capacitor reservoirs, and clamped by a voltage regulator to charge DC battery units.</p>
-        <div class="p-3 bg-slate-50 rounded border border-slate-200 text-amber-700 text-[11px]">
-          Impact Force -&gt; AC Pulse -&gt; Bridge Rectifier -&gt; Filtering -&gt; DC Voltage Reg -&gt; Storage
-        </div>
-      </div>
-      <div class="text-right pt-2">
-        <button onclick="closeModal('fspg-modal')" class="px-4 py-1.5 rounded bg-emerald-50 border border-emerald-300 text-emerald-800 text-xs font-semibold">CLOSE</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- JAVASCRIPT: PCB CANVAS, INTERACTIVE LOGIC & CONNECTING-THE-DOTS CURSOR -->
   <script>
-    lucide.createIcons();
+    const canvas = document.getElementById('preview-stage');
+    const ctx = canvas.getContext('2d');
+    let mode = 'constellation';
 
-    /* ========================================================
-       1. CONNECTING-THE-DOTS CURSOR ANIMATION
-       ======================================================== */
-    const cCanvas = document.getElementById('cursor-canvas');
-    const cCtx = cCanvas.getContext('2d');
-    let cWidth = (cCanvas.width = window.innerWidth);
-    let cHeight = (cCanvas.height = window.innerHeight);
+    let pointer = { x: canvas.width / 2, y: canvas.height / 2, trailX: canvas.width / 2, trailY: canvas.height / 2 };
+    let reticleAngle = 0;
 
-    let mouse = { x: -100, y: -100, prevX: -100, prevY: -100, speed: 0 };
-    const numPoints = 28;
-    const points = [];
-
-    // Create a network of interactive cursor satellite nodes
-    for (let i = 0; i < numPoints; i++) {
-      points.push({
-        x: Math.random() * cWidth,
-        y: Math.random() * cHeight,
-        vx: (Math.random() - 0.5) * 1.2,
-        vy: (Math.random() - 0.5) * 1.2,
-        baseRadius: Math.random() * 2 + 1.5,
-        radius: 2,
-        phase: Math.random() * Math.PI * 2
+    // Constellation satellites
+    const nodes = [];
+    for (let i = 0; i < 22; i++) {
+      nodes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+        radius: Math.random() * 2 + 1.5
       });
     }
 
-    window.addEventListener('mousemove', (e) => {
-      mouse.prevX = mouse.x;
-      mouse.prevY = mouse.y;
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-      const dx = mouse.x - mouse.prevX;
-      const dy = mouse.y - mouse.prevY;
-      mouse.speed = Math.sqrt(dx * dx + dy * dy);
+    function setMode(newMode) {
+      mode = newMode;
+      ['constellation', 'reticle', 'magnetic'].forEach(m => {
+        const btn = document.getElementById('btn-' + m);
+        if (m === newMode) {
+          btn.className = "px-4 py-1.5 rounded bg-sky-600 text-white";
+        } else {
+          btn.className = "px-4 py-1.5 rounded bg-slate-800 text-slate-300 hover:bg-slate-700";
+        }
+      });
+    }
+
+    canvas.addEventListener('mousemove', (e) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = (e.clientX - rect.left) * (canvas.width / rect.width);
+      pointer.y = (e.clientY - rect.top) * (canvas.height / rect.height);
     });
 
-    window.addEventListener('resize', () => {
-      cWidth = cCanvas.width = window.innerWidth;
-      cHeight = cCanvas.height = window.innerHeight;
-    });
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    function animateCursorNetwork() {
-      cCtx.clearRect(0, 0, cWidth, cHeight);
+      // Smooth trailer interpolation
+      pointer.trailX += (pointer.x - pointer.trailX) * 0.15;
+      pointer.trailY += (pointer.y - pointer.trailY) * 0.15;
 
-      // Draw Main Cursor Point
-      if (mouse.x > 0 && mouse.y > 0) {
-        cCtx.beginPath();
-        cCtx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
-        cCtx.fillStyle = '#0284c7';
-        cCtx.shadowColor = '#0284c7';
-        cCtx.shadowBlur = 8;
-        cCtx.fill();
-        cCtx.shadowBlur = 0;
-      }
+      if (mode === 'constellation') {
+        // Mode 1: Constellation & Connecting Nodes
+        nodes.forEach((n, idx) => {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < 0 || n.x > canvas.width) n.vx *= -1;
+          if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
 
-      // Update and connect constellation points
-      for (let i = 0; i < points.length; i++) {
-        const pt = points[i];
+          const dx = pointer.x - n.x;
+          const dy = pointer.y - n.y;
+          const d = Math.sqrt(dx * dx + dy * dy);
 
-        // Subtle organic float
-        pt.phase += 0.03;
-        pt.x += pt.vx + Math.sin(pt.phase) * 0.3;
-        pt.y += pt.vy + Math.cos(pt.phase) * 0.3;
-
-        // Gravitational pull towards mouse pointer
-        if (mouse.x > 0 && mouse.y > 0) {
-          const dmx = mouse.x - pt.x;
-          const dmy = mouse.y - pt.y;
-          const distMouse = Math.sqrt(dmx * dmx + dmy * dmy);
-
-          if (distMouse < 180) {
-            const pull = (180 - distMouse) / 180 * 0.035;
-            pt.x += dmx * pull;
-            pt.y += dmy * pull;
-
-            // Connecting line from point to cursor
-            cCtx.beginPath();
-            cCtx.moveTo(pt.x, pt.y);
-            cCtx.lineTo(mouse.x, mouse.y);
-            cCtx.strokeStyle = `rgba(2, 132, 199, ${(1 - distMouse / 180) * 0.65})`;
-            cCtx.lineWidth = 1.2;
-            cCtx.stroke();
+          if (d < 150) {
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(pointer.x, pointer.y);
+            ctx.strokeStyle = `rgba(14, 165, 233, ${1 - d / 150})`;
+            ctx.stroke();
           }
-        }
 
-        // Boundary bounce
-        if (pt.x < 0 || pt.x > cWidth) pt.vx *= -1;
-        if (pt.y < 0 || pt.y > cHeight) pt.vy *= -1;
-
-        // Draw individual constellation dot
-        cCtx.beginPath();
-        cCtx.arc(pt.x, pt.y, pt.baseRadius, 0, Math.PI * 2);
-        cCtx.fillStyle = '#0284c7';
-        cCtx.fill();
-
-        // Connect nearby points to each other
-        for (let j = i + 1; j < points.length; j++) {
-          const pt2 = points[j];
-          const dx = pt.x - pt2.x;
-          const dy = pt.y - pt2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 90) {
-            cCtx.beginPath();
-            cCtx.moveTo(pt.x, pt.y);
-            cCtx.lineTo(pt2.x, pt2.y);
-            cCtx.strokeStyle = `rgba(14, 165, 233, ${(1 - dist / 90) * 0.35})`;
-            cCtx.lineWidth = 0.8;
-            cCtx.stroke();
-          }
-        }
-      }
-
-      requestAnimationFrame(animateCursorNetwork);
-    }
-    animateCursorNetwork();
-
-    /* ========================================================
-       2. INTERACTIVE PCB BACKGROUND CANVAS
-       ======================================================== */
-    const canvas = document.getElementById('pcb-canvas');
-    const ctx = canvas.getContext('2d');
-
-    let width, height;
-    let nodes = [];
-    let pulses = [];
-
-    function resizeCanvas() {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      initPcbNetwork();
-    }
-
-    function initPcbNetwork() {
-      nodes = [];
-      const spacing = 80;
-      const cols = Math.ceil(width / spacing);
-      const rows = Math.ceil(height / spacing);
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          if (Math.random() > 0.65) {
-            nodes.push({
-              x: c * spacing + (Math.random() * 20 - 10),
-              y: r * spacing + (Math.random() * 20 - 10),
-              radius: Math.random() > 0.85 ? 3.5 : 2,
-              hasVia: Math.random() > 0.7,
-              connections: []
-            });
-          }
-        }
-      }
-
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = Math.abs(nodes[i].x - nodes[j].x);
-          const dy = Math.abs(nodes[i].y - nodes[j].y);
-          if ((dx < 120 && dy < 40) || (dy < 120 && dx < 40)) {
-            nodes[i].connections.push(nodes[j]);
-          }
-        }
-      }
-    }
-
-    class ElectricPulse {
-      constructor(startNode, endNode, speed = 2, color = '#0284c7') {
-        this.start = startNode;
-        this.end = endNode;
-        this.progress = 0;
-        this.speed = speed;
-        this.color = color;
-      }
-
-      update() {
-        this.progress += this.speed * 0.01;
-      }
-
-      draw(context) {
-        const cx = this.start.x + (this.end.x - this.start.x) * this.progress;
-        const cy = this.start.y + (this.end.y - this.start.y) * this.progress;
-
-        context.beginPath();
-        context.arc(cx, cy, 2.5, 0, Math.PI * 2);
-        context.fillStyle = this.color;
-        context.shadowColor = this.color;
-        context.shadowBlur = 8;
-        context.fill();
-        context.shadowBlur = 0;
-      }
-    }
-
-    function spawnRandomPulse() {
-      if (nodes.length === 0) return;
-      const randomNode = nodes[Math.floor(Math.random() * nodes.length)];
-      if (randomNode.connections.length > 0) {
-        const targetNode = randomNode.connections[Math.floor(Math.random() * randomNode.connections.length)];
-        pulses.push(new ElectricPulse(randomNode, targetNode, 2 + Math.random() * 2, '#0284c7'));
-      }
-    }
-
-    window.triggerElectricBurst = function() {
-      for (let i = 0; i < 25; i++) {
-        spawnRandomPulse();
-      }
-    };
-
-    const triggerBtn = document.getElementById('trigger-pulse-btn');
-    if (triggerBtn) {
-      triggerBtn.addEventListener('click', triggerElectricBurst);
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function animatePcb() {
-      ctx.clearRect(0, 0, width, height);
-
-      // Clean Light PCB Traces
-      ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(203, 213, 225, 0.85)';
-
-      for (let i = 0; i < nodes.length; i++) {
-        const n1 = nodes[i];
-        for (let j = 0; j < n1.connections.length; j++) {
-          const n2 = n1.connections[j];
           ctx.beginPath();
-          ctx.moveTo(n1.x, n1.y);
-          ctx.lineTo(n2.x, n1.y);
-          ctx.lineTo(n2.x, n2.y);
-          ctx.stroke();
-        }
-      }
+          ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+          ctx.fillStyle = '#38bdf8';
+          ctx.fill();
+        });
 
-      // Solder Pads
-      for (let i = 0; i < nodes.length; i++) {
-        const n = nodes[i];
+        // Center dot
         ctx.beginPath();
-        ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-        ctx.fillStyle = n.hasVia ? '#94a3b8' : '#cbd5e1';
+        ctx.arc(pointer.x, pointer.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = '#0284c7';
+        ctx.fill();
+
+      } else if (mode === 'reticle') {
+        // Mode 2: Rotating Reticle & Compass Ticks
+        reticleAngle += 0.03;
+        ctx.save();
+        ctx.translate(pointer.trailX, pointer.trailY);
+        ctx.rotate(reticleAngle);
+
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, 24, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // 4 compass tick marks
+        [0, Math.PI / 2, Math.PI, (3 * Math.PI) / 2].forEach(angle => {
+          const x1 = Math.cos(angle) * 20;
+          const y1 = Math.sin(angle) * 20;
+          const x2 = Math.cos(angle) * 28;
+          const y2 = Math.sin(angle) * 28;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        });
+        ctx.restore();
+
+        // Pointer core dot
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fill();
+
+      } else if (mode === 'magnetic') {
+        // Mode 3: Fluid Magnetic Follower
+        ctx.beginPath();
+        ctx.arc(pointer.trailX, pointer.trailY, 20, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(pointer.x, pointer.y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#0284c7';
         ctx.fill();
       }
 
-      // Electric Pulses
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const p = pulses[i];
-        p.update();
-        p.draw(ctx);
-        if (p.progress >= 1) {
-          pulses.splice(i, 1);
-        }
-      }
-
-      if (Math.random() < 0.08) {
-        spawnRandomPulse();
-      }
-
-      requestAnimationFrame(animatePcb);
+      requestAnimationFrame(draw);
     }
-    animatePcb();
-
-    /* ========================================================
-       3. INTERACTIVE 8051 FIRMWARE CONTROLLER LOGIC
-       ======================================================== */
-    let isTankFull = false;
-
-    window.toggleMcuSensor = function() {
-      isTankFull = !isTankFull;
-      const relayText = document.getElementById('mcu-relay-status');
-      const relayDot = document.getElementById('mcu-relay-indicator');
-      const sensorLabel = document.getElementById('mcu-sensor-label');
-      const log = document.getElementById('mcu-log');
-
-      if (isTankFull) {
-        sensorLabel.textContent = "HIGH (Overflow Risk)";
-        sensorLabel.className = "text-amber-600 font-bold";
-        
-        relayText.textContent = "RELAY OPEN (CUT)";
-        relayText.className = "text-red-600 font-bold";
-        relayDot.className = "w-3.5 h-3.5 rounded-full bg-red-500 shadow-sm";
-        
-        log.innerHTML = "&gt; SENSOR_HIGH Triggered (P1.1=1). Interrupt dispatched: P1.0 set LOW. Pump stopped.";
-      } else {
-        sensorLabel.textContent = "LOW (Dry)";
-        sensorLabel.className = "text-slate-700 font-bold";
-        
-        relayText.textContent = "PUMP ACTIVE";
-        relayText.className = "text-emerald-600 font-bold";
-        relayDot.className = "w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm";
-        
-        log.innerHTML = "&gt; Water level depleted (P1.1=0). P1.0 toggled HIGH. Pumping initiated.";
-      }
-      triggerElectricBurst();
-    };
-
-    /* ========================================================
-       4. MODAL HANDLERS
-       ======================================================== */
-    window.openModal = function(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.remove('hidden');
-    };
-
-    window.closeModal = function(id) {
-      const el = document.getElementById(id);
-      if (el) el.classList.add('hidden');
-    };
+    draw();
   </script>
 </body>
 </html>
