@@ -78,31 +78,93 @@
       text-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
     }
 
-    /* Custom Smooth Interactive Rotating Ring Cursor */
-    #custom-cursor {
+    /* Precision Engineering Reticle Cursor */
+    #cursor-dot {
       position: fixed;
       top: 0;
       left: 0;
-      width: 32px;
-      height: 32px;
-      border: 2px dashed #0284c7;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.2s, height 0.2s;
-    }
-    #custom-cursor-dot {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       background-color: #0284c7;
       border-radius: 50%;
       pointer-events: none;
       z-index: 10000;
       transform: translate(-50%, -50%);
+      transition: width 0.15s, height 0.15s, background-color 0.15s;
+    }
+
+    #cursor-reticle {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 36px;
+      height: 36px;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                  height 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Outer Ring */
+    .reticle-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1px solid rgba(2, 132, 199, 0.35);
+      box-shadow: 0 0 10px rgba(2, 132, 199, 0.08);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    /* 4 Compass Tick Markers */
+    .reticle-tick {
+      position: absolute;
+      background-color: #0284c7;
+      transition: background-color 0.2s ease;
+    }
+    .reticle-tick.top {
+      top: -2px;
+      left: 50%;
+      width: 1px;
+      height: 5px;
+      transform: translateX(-50%);
+    }
+    .reticle-tick.bottom {
+      bottom: -2px;
+      left: 50%;
+      width: 1px;
+      height: 5px;
+      transform: translateX(-50%);
+    }
+    .reticle-tick.left {
+      left: -2px;
+      top: 50%;
+      width: 5px;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+    .reticle-tick.right {
+      right: -2px;
+      top: 50%;
+      width: 5px;
+      height: 1px;
+      transform: translateY(-50%);
+    }
+
+    /* Active State on Hovering Interactive Elements */
+    body.cursor-hover #cursor-reticle {
+      width: 48px;
+      height: 48px;
+    }
+    body.cursor-hover .reticle-ring {
+      border-color: rgba(2, 132, 199, 0.75);
+      border-style: solid;
+      background: rgba(2, 132, 199, 0.04);
+    }
+    body.cursor-hover #cursor-dot {
+      background-color: #0369a1;
+      width: 7px;
+      height: 7px;
     }
 
     /* Custom Scrollbar */
@@ -124,9 +186,15 @@
 
 <body class="selection:bg-sky-200 selection:text-slate-900">
 
-  <!-- Rotating Custom Cursor Elements -->
-  <div id="custom-cursor"></div>
-  <div id="custom-cursor-dot"></div>
+  <!-- Precision Rotating Reticle Cursor Elements -->
+  <div id="cursor-dot"></div>
+  <div id="cursor-reticle">
+    <div class="reticle-ring"></div>
+    <div class="reticle-tick top"></div>
+    <div class="reticle-tick bottom"></div>
+    <div class="reticle-tick left"></div>
+    <div class="reticle-tick right"></div>
+  </div>
 
   <!-- Interactive PCB & Electric Trace Canvas (Bright Background) -->
   <canvas id="pcb-canvas" class="fixed inset-0 pointer-events-auto z-0 bg-slate-50"></canvas>
@@ -722,11 +790,10 @@
 
   <!-- JAVASCRIPT: PCB CANVAS & INTERACTIVE LOGIC -->
   <script>
-    // Initialize Lucide Icons
     lucide.createIcons();
 
     /* ========================================================
-       1. INTERACTIVE PCB BACKGROUND CANVAS & ROTATING CURSOR
+       1. INTERACTIVE PCB BACKGROUND CANVAS & ROTATING RETICLE
        ======================================================== */
     const canvas = document.getElementById('pcb-canvas');
     const ctx = canvas.getContext('2d');
@@ -736,12 +803,12 @@
     let pulses = [];
     let mouse = { x: null, y: null, maxDist: 180 };
 
-    // Rotating Cursor Elements
-    const cursorRing = document.getElementById('custom-cursor');
-    const cursorDot = document.getElementById('custom-cursor-dot');
-    let cursorAngle = 0;
+    // Dynamic Reticle Cursor Coordinates & Physics
+    const cursorDot = document.getElementById('cursor-dot');
+    const cursorReticle = document.getElementById('cursor-reticle');
     let targetX = -100, targetY = -100;
     let currentX = -100, currentY = -100;
+    let currentAngle = 0;
 
     function resizeCanvas() {
       width = canvas.width = window.innerWidth;
@@ -749,7 +816,6 @@
       initPcbNetwork();
     }
 
-    // Circuit Nodes on an Orthogonal Grid
     function initPcbNetwork() {
       nodes = [];
       const spacing = 80;
@@ -836,6 +902,12 @@
       if (Math.random() > 0.8) spawnRandomPulse();
     });
 
+    // Detect clickable hover states to smoothly expand reticle
+    document.querySelectorAll('a, button, [onclick]').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+    });
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
@@ -895,17 +967,21 @@
         spawnRandomPulse();
       }
 
-      // Cursor Position & Rotation Interpolation
-      currentX += (targetX - currentX) * 0.18;
-      currentY += (targetY - currentY) * 0.18;
-      cursorAngle = (cursorAngle + 2) % 360;
+      // Cursor Physics: Responsive damping + velocity-driven spin
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      const speed = Math.sqrt(dx * dx + dy * dy);
 
-      if (cursorRing && cursorDot) {
+      currentX += dx * 0.22;
+      currentY += dy * 0.22;
+      currentAngle = (currentAngle + 1.2 + speed * 0.15) % 360;
+
+      if (cursorReticle && cursorDot) {
         cursorDot.style.left = `${targetX}px`;
         cursorDot.style.top = `${targetY}px`;
-        cursorRing.style.left = `${currentX}px`;
-        cursorRing.style.top = `${currentY}px`;
-        cursorRing.style.transform = `translate(-50%, -50%) rotate(${cursorAngle}deg)`;
+        cursorReticle.style.left = `${currentX}px`;
+        cursorReticle.style.top = `${currentY}px`;
+        cursorReticle.style.transform = `translate(-50%, -50%) rotate(${currentAngle}deg)`;
       }
 
       requestAnimationFrame(animate);
