@@ -30,40 +30,40 @@
       font-family: "Times New Roman", Times, serif !important;
     }
 
+    /* Eye-Care Neutral Warm Background */
     body {
-      background-color: #f8fafc;
-      color: #0f172a;
+      background-color: #f5f5f0;
+      color: #1e293b;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Lightweight Ambient Background Animation */
+    /* Soft, Eye-Friendly Ambient Backdrop Glow */
     .ambient-sphere {
       position: fixed;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(100px);
       pointer-events: none;
       z-index: 0;
-      opacity: 0.45;
-      animation: floatSlow 18s ease-in-out infinite alternate;
+      opacity: 0.35;
+      animation: floatSlow 20s ease-in-out infinite alternate;
     }
 
     .ambient-sphere-1 {
-      width: 450px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(186, 230, 253, 0.8), rgba(224, 242, 254, 0));
-      top: -100px;
-      left: -100px;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, #e2e8df, rgba(245, 245, 240, 0));
+      top: -120px;
+      left: -120px;
     }
 
     .ambient-sphere-2 {
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(199, 210, 254, 0.7), rgba(238, 242, 255, 0));
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, #dde3ea, rgba(245, 245, 240, 0));
       bottom: 5%;
-      right: -120px;
-      animation-duration: 22s;
-      animation-delay: -5s;
+      right: -150px;
+      animation-duration: 25s;
     }
 
     @keyframes floatSlow {
@@ -71,19 +71,19 @@
         transform: translate(0px, 0px) scale(1);
       }
       50% {
-        transform: translate(40px, 30px) scale(1.05);
+        transform: translate(45px, 35px) scale(1.04);
       }
       100% {
-        transform: translate(-30px, 45px) scale(0.95);
+        transform: translate(-35px, 50px) scale(0.96);
       }
     }
 
-    /* Executive Spotlight Card Architecture */
+    /* Eye-Comfort Glassmorphic Spotlight Cards */
     .spotlight-card {
       position: relative;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid #e2e8f0;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid #e2e5dc;
       border-radius: 0.75rem;
       overflow: hidden;
       transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
@@ -91,19 +91,19 @@
 
     .spotlight-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08);
+      box-shadow: 0 10px 25px -5px rgba(30, 41, 59, 0.06);
       border-color: #cbd5e1;
     }
 
-    /* Subtle dynamic illumination overlay following the mouse */
+    /* Subtle illumination following the mouse pointer */
     .spotlight-card::before {
       content: '';
       position: absolute;
       top: var(--mouse-y, -1000px);
       left: var(--mouse-x, -1000px);
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(2, 132, 199, 0.08) 0%, transparent 70%);
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(2, 132, 199, 0.07) 0%, transparent 70%);
       transform: translate(-50%, -50%);
       pointer-events: none;
       opacity: 0;
@@ -115,16 +115,16 @@
       opacity: 1;
     }
 
-    /* Scrollbar */
+    /* Neutral Scrollbar */
     ::-webkit-scrollbar {
-      width: 6px;
+      width: 7px;
     }
     ::-webkit-scrollbar-track {
-      background: #f1f5f9;
+      background: #f5f5f0;
     }
     ::-webkit-scrollbar-thumb {
       background: #cbd5e1;
-      border-radius: 3px;
+      border-radius: 4px;
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
@@ -132,37 +132,34 @@
   </style>
 </head>
 
-<body class="selection:bg-sky-100 selection:text-sky-900">
+<body class="selection:bg-slate-300 selection:text-slate-900">
 
-  <!-- Soft Ambient Floating Spheres -->
+  <!-- Eye-Comfort Ambient Glow Nodes -->
   <div class="ambient-sphere ambient-sphere-1"></div>
   <div class="ambient-sphere ambient-sphere-2"></div>
 
-  <!-- Subtle Blueprint Grid Pattern -->
-  <div class="fixed inset-0 bg-[radial-gradient(#e2e8f0_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none z-0"></div>
-
-  <!-- Page Layout Wrapper -->
+  <!-- Full-Screen Content Wrapper -->
   <div class="relative z-10 flex flex-col min-h-screen">
 
     <!-- Top Navigation Bar -->
-    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-slate-200 px-6 py-4">
-      <div class="max-w-5xl mx-auto flex items-center justify-between">
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-[#f5f5f0]/90 border-b border-[#e2e5dc] px-6 lg:px-12 py-4">
+      <div class="w-full max-w-7xl mx-auto flex items-center justify-between">
         
         <a href="#hero" class="flex items-center gap-2 group">
-          <span class="w-2 h-2 rounded-full bg-sky-600"></span>
-          <span class="text-sm tracking-widest text-slate-900 group-hover:text-sky-700 transition-colors uppercase font-bold">
+          <span class="w-2.5 h-2.5 rounded-full bg-sky-700"></span>
+          <span class="text-sm tracking-widest text-slate-900 group-hover:text-sky-800 transition-colors uppercase font-bold">
             Siva Nanda Reddy Ramireddy
           </span>
         </a>
 
         <!-- Desktop Navigation Links -->
-        <div class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-wider text-slate-600 uppercase">
-          <a href="#projects" class="hover:text-sky-700 transition-colors">Projects</a>
-          <a href="#internship" class="hover:text-sky-700 transition-colors">Industrial Experience</a>
-          <a href="#skills" class="hover:text-sky-700 transition-colors">Technical Skills</a>
-          <a href="#leadership" class="hover:text-sky-700 transition-colors">Leadership</a>
-          <a href="#education" class="hover:text-sky-700 transition-colors">Education</a>
-          <a href="#contact" class="px-3.5 py-1.5 rounded bg-sky-600 text-white hover:bg-sky-700 transition-all shadow-sm">
+        <div class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-wider text-slate-700 uppercase">
+          <a href="#projects" class="hover:text-sky-800 transition-colors">Projects</a>
+          <a href="#internship" class="hover:text-sky-800 transition-colors">Industrial Experience</a>
+          <a href="#skills" class="hover:text-sky-800 transition-colors">Technical Skills</a>
+          <a href="#leadership" class="hover:text-sky-800 transition-colors">Leadership</a>
+          <a href="#education" class="hover:text-sky-800 transition-colors">Education</a>
+          <a href="#contact" class="px-4 py-1.5 rounded bg-sky-700 text-white hover:bg-sky-800 transition-all shadow-sm">
             Contact
           </a>
         </div>
@@ -170,126 +167,114 @@
       </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header id="hero" class="max-w-5xl mx-auto px-6 pt-16 pb-12 w-full">
-      <div class="max-w-3xl space-y-5">
+    <!-- Hero Section (Direct name start, full width spread) -->
+    <header id="hero" class="w-full max-w-7xl mx-auto px-6 lg:px-12 pt-16 pb-12">
+      <div class="w-full space-y-4">
         
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 text-slate-700 text-xs shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>B.Tech in Electrical & Electronics Engineering (2023–2027)</span>
-        </div>
-
-        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
           Siva Nanda Reddy Ramireddy
         </h1>
 
-        <p class="text-lg text-sky-800 font-semibold">
-          Electrical & Electronics Engineer | Embedded Systems, IoT & Control Circuit Design
+        <p class="text-lg sm:text-xl text-sky-900 font-semibold">
+          Aspiring Electrical & Electronics Engineer | Embedded Systems, IoT & Control Circuit Design
         </p>
 
-        <p class="text-slate-600 text-base leading-relaxed">
-          Aspiring Electrical & Electronics Engineer with practical experience in circuit simulation, microcontroller architectures (8051, 8085, 8086), and hardware prototyping. Proficient in C, Python, Assembly Language, Proteus, MATLAB/Simulink, and Keil &micro;Vision. Skilled in designing and validating embedded control circuits and eager to contribute analytical problem-solving skills to entry-level engineering roles.
+        <p class="text-slate-700 text-base sm:text-lg leading-relaxed text-justify">
+          Aspiring Electrical & Electronics Engineer with hands-on experience in circuit simulation, microcontroller programming (8051/8085/8086), and hardware prototyping. Proficient in C, Python, Assembly Language, Proteus, MATLAB/Simulink, and Keil &micro;Vision. Skilled in designing and validating embedded systems and control circuits through academic projects. Eager to apply technical knowledge, analytical thinking, and problem-solving skills to entry-level embedded systems, IoT, or software development roles and contribute to innovative engineering solutions.
         </p>
 
-        <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center gap-4 pt-2 text-xs">
-          <a href="#contact" class="px-5 py-2.5 rounded bg-sky-600 text-white font-bold hover:bg-sky-700 transition-all flex items-center gap-2 shadow-sm">
-            <i data-lucide="message-square" class="w-4 h-4"></i> Get in Touch / Talk With Me
-          </a>
-          <a href="#projects" class="px-5 py-2.5 rounded bg-white text-slate-800 border border-slate-300 hover:border-slate-400 font-semibold transition-all flex items-center gap-2">
-            <i data-lucide="layers" class="w-4 h-4 text-sky-600"></i> View Projects
-          </a>
-          <span class="text-slate-500 flex items-center gap-1.5 pl-2">
-            <i data-lucide="map-pin" class="w-4 h-4 text-slate-400"></i> Kadapa, Andhra Pradesh
-          </span>
+        <!-- Location Only (Contacts removed below summary) -->
+        <div class="pt-2 text-xs text-slate-600 flex items-center gap-2">
+          <i data-lucide="map-pin" class="w-4 h-4 text-sky-700"></i>
+          <span class="font-semibold text-slate-800">Kadapa, Andhra Pradesh</span>
         </div>
 
       </div>
     </header>
 
     <!-- SECTION: FEATURED ENGINEERING PROJECTS -->
-    <section id="projects" class="max-w-5xl mx-auto px-6 py-12 w-full space-y-6">
+    <section id="projects" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 space-y-6">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Academic & Design Projects</h2>
-        <span class="text-xs text-slate-400">Validated via Proteus & Circuit Designer IDE</span>
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Academic & Design Projects</h2>
+        <span class="text-xs text-slate-500">Validated via Proteus & Circuit Designer IDE</span>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-8">
         
         <!-- Project 1: SWPC -->
-        <div class="spotlight-card p-6 flex flex-col justify-between">
+        <div class="spotlight-card p-7 flex flex-col justify-between">
           <div class="space-y-4 relative z-10">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold px-2.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-100">
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded bg-sky-100/70 text-sky-900 border border-sky-200">
                 Circuit Designer IDE
               </span>
-              <span class="text-xs text-amber-700 font-semibold flex items-center gap-1">
-                <i data-lucide="award" class="w-3.5 h-3.5"></i> SAMSLESHANA-2K26
+              <span class="text-xs text-amber-800 font-semibold flex items-center gap-1">
+                <i data-lucide="award" class="w-3.5 h-3.5 text-amber-700"></i> SAMSLESHANA-2K26
               </span>
             </div>
 
             <div>
               <h3 class="text-xl font-bold text-slate-900">SWPC - Smart Water Pump Controller</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Automated Water Management & Pump Runtime Logic</p>
+              <p class="text-xs text-slate-600 mt-0.5">Automated Water Management & Pump Runtime Logic</p>
             </div>
 
-            <p class="text-slate-600 text-sm leading-relaxed">
-              Designed and simulated an automated water management system. Developed microcontroller control logic to eliminate reservoir overflow and optimize pump runtime, safeguarding motors against dry-run damage.
+            <p class="text-slate-700 text-sm leading-relaxed text-justify">
+              Designed and simulated an automated water management system in Circuit Designer IDE. Developed microcontroller control logic to eliminate water overflow and optimize pump runtime, preventing dry-run damage.
             </p>
 
-            <ul class="space-y-2 text-xs text-slate-600">
+            <ul class="space-y-2 text-xs text-slate-700">
               <li class="flex items-start gap-2">
-                <span class="text-sky-600 font-bold">•</span>
-                <span>Presented as a technical paper titled <em>"Smart Water Pump Controller for Farms & Houses"</em> at SAMSLESHANA-2K26 National Symposium (AITS Kadapa, Feb 2026).</span>
+                <span class="text-sky-700 font-bold">•</span>
+                <span>Presented as a technical paper titled <em>"Smart Water Pump Controller for Farms & Houses"</em> at SAMSLESHANA-2K26 National Level Technical Symposium (AITS Kadapa, Feb 2026).</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-sky-600 font-bold">•</span>
-                <span>Implemented sensor debounce routines and relay switching isolation for robust fluid level monitoring.</span>
+                <span class="text-sky-700 font-bold">•</span>
+                <span>Highlights: Circuit design programming combined with practical real-world problem solving.</span>
               </li>
             </ul>
           </div>
 
-          <div class="pt-4 border-t border-slate-100 mt-6 flex items-center justify-between text-xs text-slate-500 relative z-10">
-            <span>Embedded C • Relay Interfacing • Logic Design</span>
+          <div class="pt-4 border-t border-[#e2e5dc] mt-6 flex items-center justify-between text-xs text-slate-600 relative z-10">
+            <span>Embedded C • Relay Interfacing • Microcontroller Logic</span>
           </div>
         </div>
 
         <!-- Project 2: FSPG -->
-        <div class="spotlight-card p-6 flex flex-col justify-between">
+        <div class="spotlight-card p-7 flex flex-col justify-between">
           <div class="space-y-4 relative z-10">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-100">
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded bg-emerald-100/70 text-emerald-900 border border-emerald-200">
                 Proteus Design Suite
               </span>
-              <span class="text-xs text-emerald-700 font-semibold">
+              <span class="text-xs text-emerald-800 font-semibold">
                 Green Energy Harvesting
               </span>
             </div>
 
             <div>
               <h3 class="text-xl font-bold text-slate-900">FSPG - Foot Step Power Generator</h3>
-              <p class="text-xs text-slate-500 mt-0.5">Kinetic Energy Conversion & Voltage Regulation</p>
+              <p class="text-xs text-slate-600 mt-0.5">Kinetic Energy Conversion & Voltage Regulation</p>
             </div>
 
-            <p class="text-slate-600 text-sm leading-relaxed">
-              Designed a clean energy harvesting simulation model in Proteus Design Suite. Converted mechanical kinetic energy into regulated electrical power for local energy storage.
+            <p class="text-slate-700 text-sm leading-relaxed text-justify">
+              Designed a green energy harvesting system in Proteus Design Suite. Converted mechanical kinetic energy into regulated electrical power for local energy storage applications.
             </p>
 
-            <ul class="space-y-2 text-xs text-slate-600">
+            <ul class="space-y-2 text-xs text-slate-700">
               <li class="flex items-start gap-2">
-                <span class="text-emerald-600 font-bold">•</span>
-                <span>Modeled transducer conversion stages with full-wave rectification and capacitor filtering.</span>
+                <span class="text-emerald-700 font-bold">•</span>
+                <span>Highlights: Energy conversion + circuit design + simulation validation.</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-emerald-600 font-bold">•</span>
-                <span>Simulated linear DC voltage stabilization circuits to safely feed rechargeable battery storage units.</span>
+                <span class="text-emerald-700 font-bold">•</span>
+                <span>Modeled transducer conversion stages with full-wave rectification, capacitor filtering, and voltage stabilization.</span>
               </li>
             </ul>
           </div>
 
-          <div class="pt-4 border-t border-slate-100 mt-6 flex items-center justify-between text-xs text-slate-500 relative z-10">
-            <span>Power Electronics • Energy Harvesting • Simulation</span>
+          <div class="pt-4 border-t border-[#e2e5dc] mt-6 flex items-center justify-between text-xs text-slate-600 relative z-10">
+            <span>Power Electronics • Energy Conversion • Circuit Validation</span>
           </div>
         </div>
 
@@ -297,20 +282,20 @@
     </section>
 
     <!-- SECTION: INDUSTRIAL INTERNSHIP -->
-    <section id="internship" class="max-w-5xl mx-auto px-6 py-12 w-full space-y-6">
+    <section id="internship" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 space-y-6">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Industrial Internship Experience</h2>
-        <span class="text-xs text-slate-400">APGENCO Switchyard Analysis</span>
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Industrial Internship Experience</h2>
+        <span class="text-xs text-slate-500">APGENCO Switchyard Analysis</span>
       </div>
 
-      <div class="spotlight-card p-7 space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 relative z-10 border-b border-slate-100 pb-4">
+      <div class="spotlight-card p-8 space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-2 relative z-10 border-b border-[#e2e5dc] pb-4">
           <div>
-            <h3 class="text-xl font-bold text-slate-900">Engineering Intern</h3>
-            <p class="text-sky-800 font-semibold text-sm mt-0.5">Dr. MVR Rayalaseema Thermal Power Station (APGENCO)</p>
+            <h3 class="text-xl font-bold text-slate-900">Intern</h3>
+            <p class="text-sky-900 font-semibold text-sm mt-0.5">Dr. MVR Rayalaseema Thermal Power Station (APGENCO)</p>
           </div>
-          <span class="text-xs text-slate-500 bg-slate-50 border border-slate-200 px-3 py-1 rounded w-fit">
+          <span class="text-xs text-slate-700 bg-[#f5f5f0] border border-[#e2e5dc] px-3 py-1 rounded w-fit">
             Industrial Trainee
           </span>
         </div>
@@ -318,22 +303,22 @@
         <div class="grid md:grid-cols-3 gap-6 relative z-10 text-xs">
           <div class="space-y-2">
             <h4 class="font-bold text-slate-900 text-sm">400 kV Switchyard & SLDs</h4>
-            <p class="text-slate-600 leading-relaxed">
-              Analyzed single-line diagrams (SLDs) and operations of the 400 kV switchyard, step-up transformers, and busbar protection systems.
+            <p class="text-slate-700 leading-relaxed text-justify">
+              Analyzed operation and single-line diagrams (SLDs) of 400 kV switchyard, step-up transformers, vacuum/SF6 circuit breakers, and busbar protection systems.
             </p>
           </div>
 
           <div class="space-y-2">
-            <h4 class="font-bold text-slate-900 text-sm">Switchgear & Protection</h4>
-            <p class="text-slate-600 leading-relaxed">
-              Gained practical insights into vacuum circuit breakers (VCB) and $\text{SF}_6$ circuit breakers, arc quenching media, and high-voltage transformer protection.
+            <h4 class="font-bold text-slate-900 text-sm">Plant Protection & Maintenance</h4>
+            <p class="text-slate-700 leading-relaxed text-justify">
+              Gained practical insights into power plant protection schemes, transformer maintenance protocols, and switchgear interlocks.
             </p>
           </div>
 
           <div class="space-y-2">
             <h4 class="font-bold text-slate-900 text-sm">SCADA Control Operations</h4>
-            <p class="text-slate-600 leading-relaxed">
-              Observed telemetry, grid synchronization routines, and centralized SCADA-based control room workflows.
+            <p class="text-slate-700 leading-relaxed text-justify">
+              Observed SCADA-based control room workflows, system telemetry, and centralized grid monitoring procedures.
             </p>
           </div>
         </div>
@@ -341,64 +326,65 @@
     </section>
 
     <!-- SECTION: TECHNICAL SKILL MATRIX -->
-    <section id="skills" class="max-w-5xl mx-auto px-6 py-12 w-full space-y-6">
+    <section id="skills" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 space-y-6">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Verified Technical Skills</h2>
-        <span class="text-xs text-slate-400">Core Engineering Matrix</span>
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Technical & Professional Skills</h2>
+        <span class="text-xs text-slate-500">Core Engineering Matrix</span>
       </div>
 
       <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-6">
         
-        <div class="spotlight-card p-5 space-y-3">
-          <div class="flex items-center gap-2 text-sky-700 relative z-10">
+        <div class="spotlight-card p-6 space-y-3">
+          <div class="flex items-center gap-2 text-sky-800 relative z-10">
             <i data-lucide="cpu" class="w-4 h-4"></i>
             <h3 class="font-bold text-sm text-slate-900">Embedded & MCUs</h3>
           </div>
-          <ul class="space-y-1.5 text-xs text-slate-600 relative z-10">
+          <ul class="space-y-1.5 text-xs text-slate-700 relative z-10">
             <li>• 8051 Microcontroller</li>
-            <li>• 8085 & 8086 Processors</li>
-            <li>• Arduino Prototyping</li>
-            <li>• Keil &micro;Vision IDE</li>
+            <li>• 8085 Microprocessor</li>
+            <li>• 8086 Microprocessor</li>
+            <li>• Arduino IDE & Prototyping</li>
+            <li>• Keil &micro;Vision</li>
           </ul>
         </div>
 
-        <div class="spotlight-card p-5 space-y-3">
-          <div class="flex items-center gap-2 text-emerald-700 relative z-10">
+        <div class="spotlight-card p-6 space-y-3">
+          <div class="flex items-center gap-2 text-emerald-800 relative z-10">
             <i data-lucide="layers" class="w-4 h-4"></i>
-            <h3 class="font-bold text-sm text-slate-900">EDA & Simulation</h3>
+            <h3 class="font-bold text-sm text-slate-900">Simulation & Design</h3>
           </div>
-          <ul class="space-y-1.5 text-xs text-slate-600 relative z-10">
+          <ul class="space-y-1.5 text-xs text-slate-700 relative z-10">
             <li>• Proteus Design Suite</li>
-            <li>• MATLAB & Simulink</li>
-            <li>• Multisim Design Tools</li>
+            <li>• MATLAB / Simulink</li>
             <li>• Circuit Designer IDE</li>
+            <li>• Multisim Circuit Tools</li>
           </ul>
         </div>
 
-        <div class="spotlight-card p-5 space-y-3">
-          <div class="flex items-center gap-2 text-amber-700 relative z-10">
+        <div class="spotlight-card p-6 space-y-3">
+          <div class="flex items-center gap-2 text-amber-800 relative z-10">
             <i data-lucide="code" class="w-4 h-4"></i>
             <h3 class="font-bold text-sm text-slate-900">Programming</h3>
           </div>
-          <ul class="space-y-1.5 text-xs text-slate-600 relative z-10">
-            <li>• C (Embedded Systems)</li>
+          <ul class="space-y-1.5 text-xs text-slate-700 relative z-10">
+            <li>• C Programming</li>
             <li>• Python</li>
             <li>• Assembly Language</li>
-            <li>• HTML / Web Portals</li>
+            <li>• Digital Web Portals</li>
           </ul>
         </div>
 
-        <div class="spotlight-card p-5 space-y-3">
-          <div class="flex items-center gap-2 text-purple-700 relative z-10">
+        <div class="spotlight-card p-6 space-y-3">
+          <div class="flex items-center gap-2 text-purple-800 relative z-10">
             <i data-lucide="activity" class="w-4 h-4"></i>
             <h3 class="font-bold text-sm text-slate-900">Domains & Soft Skills</h3>
           </div>
-          <ul class="space-y-1.5 text-xs text-slate-600 relative z-10">
-            <li>• Digital Circuits & Logic</li>
-            <li>• Control Systems</li>
-            <li>• Power Electronics</li>
-            <li>• Team Leadership & Mgmt</li>
+          <ul class="space-y-1.5 text-xs text-slate-700 relative z-10">
+            <li>• Digital Circuits & Control Systems</li>
+            <li>• Power Electronics & Embedded</li>
+            <li>• Team Leadership & Management</li>
+            <li>• Stakeholder Communication</li>
           </ul>
         </div>
 
@@ -406,42 +392,46 @@
     </section>
 
     <!-- SECTION: LEADERSHIP & ACHIEVEMENTS -->
-    <section id="leadership" class="max-w-5xl mx-auto px-6 py-12 w-full space-y-6">
+    <section id="leadership" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 space-y-6">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Leadership, Symposia & Honors</h2>
-        <span class="text-xs text-slate-400">Institutional Contributions</span>
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Volunteer Experience & Achievements</h2>
+        <span class="text-xs text-slate-500">Symposia & Leadership</span>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-6">
+      <div class="grid md:grid-cols-2 gap-8">
         
-        <div class="spotlight-card p-6 space-y-3">
-          <div class="flex items-center gap-2 text-sky-700 relative z-10">
+        <div class="spotlight-card p-7 space-y-4">
+          <div class="flex items-center gap-2 text-sky-800 relative z-10">
             <i data-lucide="globe" class="w-4 h-4"></i>
-            <h3 class="font-bold text-slate-900 text-base">Webmaster — IEEE IES Chapter</h3>
+            <h3 class="font-bold text-slate-900 text-base">Webmaster (IEEE IES Chapter)</h3>
           </div>
-          <p class="text-xs text-slate-600 leading-relaxed relative z-10">
-            Administered and maintained digital web portals and assets for the IEEE Industry Electronics Society student chapter. Streamlined online event registrations and technical content delivery.
+          <p class="text-xs text-slate-700 leading-relaxed text-justify relative z-10">
+            Administered and updated official web assets and digital portals for the IEEE Industry Electronics Society, streamlining online event registration and technical content distribution.
           </p>
-          <div class="pt-2 text-xs text-slate-600 relative z-10">
-            <strong class="text-slate-800">Symposia Coordination:</strong> Orchestrated 10+ departmental technical events, including EEE RIPPLE and national-level IEEE symposia, managing budgeting and coordination for 500+ participants.
+          <div class="pt-2 text-xs text-slate-700 space-y-2 relative z-10 text-justify">
+            <p><strong>Departmental Leadership:</strong> Orchestrated 10+ technical symposia, including EEE RIPPLE and national-level IEEE events, managing budgeting, cross-functional teams, and faculty-student coordination for over 500+ participants.</p>
+            <p><strong>Student Engagement:</strong> Drove outreach and participation, successfully hosting multi-event technical fests that engaged hundreds of engineering students.</p>
           </div>
         </div>
 
-        <div class="spotlight-card p-6 space-y-3">
-          <div class="flex items-center gap-2 text-amber-700 relative z-10">
+        <div class="spotlight-card p-7 space-y-4">
+          <div class="flex items-center gap-2 text-amber-800 relative z-10">
             <i data-lucide="award" class="w-4 h-4"></i>
-            <h3 class="font-bold text-slate-900 text-base">Key Honors & Workshops</h3>
+            <h3 class="font-bold text-slate-900 text-base">Key Achievements & Delegations</h3>
           </div>
-          <ul class="space-y-2 text-xs text-slate-600 relative z-10">
+          <ul class="space-y-2.5 text-xs text-slate-700 relative z-10">
             <li>
-              <strong class="text-slate-800">IEEE YESIST12 2024:</strong> Team Leader for "Project A", selected for the preliminary round (Samriddhi / RGMCET).
+              <strong class="text-slate-900">Paper Presentation:</strong> Presented a technical paper titled "Smart Water Pump Controller for Farms & Houses" at SAMSLESHANA-2K26, a National Level Technical Symposium (AITS Kadapa, Feb 2026).
             </li>
             <li>
-              <strong class="text-slate-800">IEEE Anantapur Zonal Congress:</strong> Attended as delegate for UMANG '2K24 (G. Pulla Reddy Eng. College) & UMANG '2K23 (RGMCET).
+              <strong class="text-slate-900">Project Selection:</strong> Team Leader for "Project A", selected for the preliminary round of IEEE YESIST12 2024 (Samriddhi / RGMCET).
             </li>
             <li>
-              <strong class="text-slate-800">Modern EV Workshop:</strong> Attended workshop on Model-Based Development for Modern Electric Vehicles.
+              <strong class="text-slate-900">Workshop:</strong> Attended a Model based development on Modern Electric Vehicle.
+            </li>
+            <li>
+              <strong class="text-slate-900">IEEE Zonal Congress Delegate:</strong> Attended IEEE Anantapur Zonal Congress - UMANG' 2K24 (G. Pulla Reddy Engineering College, Sep 2024) and UMANG' 2K23 (RGMCET, Nov 2023).
             </li>
           </ul>
         </div>
@@ -450,22 +440,22 @@
     </section>
 
     <!-- SECTION: EDUCATION -->
-    <section id="education" class="max-w-5xl mx-auto px-6 py-12 w-full space-y-6">
+    <section id="education" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-12 space-y-6">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
-        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Education</h2>
-        <span class="text-xs text-slate-400">Academic Background</span>
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
+        <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Education</h2>
+        <span class="text-xs text-slate-500">Academic Background</span>
       </div>
 
-      <div class="divide-y divide-slate-200 text-sm">
+      <div class="divide-y divide-[#e2e5dc] text-sm">
         
         <div class="py-4 flex flex-col sm:flex-row justify-between sm:items-baseline gap-1">
           <div>
             <h3 class="font-bold text-slate-900">B.Tech in Electrical & Electronics Engineering</h3>
-            <p class="text-slate-600 text-xs">Rajeev Gandhi Memorial College of Engineering and Technology, Nandyala</p>
+            <p class="text-slate-600 text-xs">Rajeev Gandhi Memorial College of Engineering and Technology, Nandyala, Andhra Pradesh</p>
           </div>
           <div class="sm:text-right text-xs">
-            <span class="font-bold text-sky-800">GPA: 7.5 / 10.0</span>
+            <span class="font-bold text-sky-900">GPA: 7.5 / 10.0</span>
             <span class="text-slate-500 block">2023 – 2027</span>
           </div>
         </div>
@@ -473,7 +463,7 @@
         <div class="py-4 flex flex-col sm:flex-row justify-between sm:items-baseline gap-1">
           <div>
             <h3 class="font-bold text-slate-900">Intermediate (MPC)</h3>
-            <p class="text-slate-600 text-xs">Narayana Junior College, Kadapa</p>
+            <p class="text-slate-600 text-xs">Narayana Junior College, Kadapa, Andhra Pradesh</p>
           </div>
           <div class="sm:text-right text-xs">
             <span class="font-bold text-slate-800">Percentage: 78.6%</span>
@@ -484,7 +474,7 @@
         <div class="py-4 flex flex-col sm:flex-row justify-between sm:items-baseline gap-1">
           <div>
             <h3 class="font-bold text-slate-900">Secondary School Certificate (Class 10)</h3>
-            <p class="text-slate-600 text-xs">Sri Chaitanya School, Kadapa</p>
+            <p class="text-slate-600 text-xs">Sri Chaitanya School, Kadapa, Andhra Pradesh</p>
           </div>
           <div class="sm:text-right text-xs">
             <span class="font-bold text-emerald-800">Percentage: 100%</span>
@@ -495,84 +485,88 @@
       </div>
     </section>
 
-    <!-- SECTION: WAYS TO TALK WITH ME (CONTACT HUB) -->
-    <section id="contact" class="max-w-5xl mx-auto px-6 py-16 w-full space-y-8">
+    <!-- SECTION: CONTACT (Ways to talk with me) -->
+    <section id="contact" class="w-full max-w-7xl mx-auto px-6 lg:px-12 py-16 space-y-8">
       
-      <div class="border-b border-slate-200 pb-3 flex items-baseline justify-between">
+      <div class="border-b border-[#e2e5dc] pb-3 flex items-baseline justify-between">
         <div>
-          <h2 class="text-xs uppercase font-bold tracking-widest text-slate-500">Communication Channels</h2>
+          <h2 class="text-xs uppercase font-bold tracking-widest text-slate-600">Communication Channels</h2>
           <h3 class="text-2xl font-bold text-slate-900 mt-1">Ways to Talk with Me</h3>
         </div>
-        <span class="text-xs text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded font-semibold flex items-center gap-1.5">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Available for Opportunities
+        <span class="text-xs text-emerald-800 bg-emerald-100/70 border border-emerald-300 px-3 py-1 rounded font-semibold flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-600 animate-ping"></span> Open for Roles
         </span>
       </div>
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        <!-- Option 1: Direct Email -->
+        <!-- Option 1: Direct Email (Hyperlinked as E-Mail) -->
         <a href="mailto:rsivareddy46@gmail.com" class="spotlight-card p-6 flex flex-col justify-between group hover:border-sky-400 transition-all">
           <div class="space-y-3 relative z-10">
-            <div class="w-10 h-10 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 group-hover:scale-110 transition-transform">
+            <div class="w-10 h-10 rounded-lg bg-sky-100/70 border border-sky-200 flex items-center justify-center text-sky-800 group-hover:scale-110 transition-transform">
               <i data-lucide="mail" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-bold text-slate-900 text-base">Send an Email</h4>
-              <p class="text-xs text-slate-500 mt-1">Best for interview invites, project discussions, and documentation.</p>
+              <h4 class="font-bold text-slate-900 text-base">E-Mail</h4>
+              <p class="text-xs text-slate-600 mt-1">Direct communication for roles, interviews, and project collaborations.</p>
             </div>
           </div>
-          <div class="pt-4 border-t border-slate-100 mt-4 relative z-10 text-xs font-bold text-sky-700 flex items-center gap-1">
-            <span>rsivareddy46@gmail.com</span>
+          <div class="pt-4 border-t border-[#e2e5dc] mt-4 relative z-10 text-xs font-bold text-sky-800 flex items-center gap-1">
+            <span>E-Mail (rsivareddy46@gmail.com)</span>
             <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
           </div>
         </a>
 
-        <!-- Option 2: LinkedIn -->
+        <!-- Option 2: LinkedIn with Official Brand Image -->
         <a href="https://www.linkedin.com/in/r-sivanandareddy" target="_blank" rel="noopener noreferrer" class="spotlight-card p-6 flex flex-col justify-between group hover:border-sky-400 transition-all">
           <div class="space-y-3 relative z-10">
-            <div class="w-10 h-10 rounded-lg bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 group-hover:scale-110 transition-transform">
-              <i data-lucide="linkedin" class="w-5 h-5"></i>
+            <div class="w-10 h-10 rounded-lg bg-white border border-[#e2e5dc] p-1.5 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
+              <!-- Official LinkedIn Logo Image -->
+              <img src="https://cdn-icons-png.flvd.com/512/174/174857.png" 
+                   onerror="this.onerror=null; this.src='https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png';" 
+                   alt="LinkedIn" 
+                   class="w-full h-full object-contain" />
             </div>
             <div>
-              <h4 class="font-bold text-slate-900 text-base">Connect on LinkedIn</h4>
-              <p class="text-xs text-slate-500 mt-1">Professional networking, recommendations, and messages.</p>
+              <h4 class="font-bold text-slate-900 text-base">LinkedIn Profile</h4>
+              <p class="text-xs text-slate-600 mt-1">Professional networking, experience recommendations, and connections.</p>
             </div>
           </div>
-          <div class="pt-4 border-t border-slate-100 mt-4 relative z-10 text-xs font-bold text-sky-700 flex items-center gap-1">
-            <span>in/r-sivanandareddy</span>
+          <div class="pt-4 border-t border-[#e2e5dc] mt-4 relative z-10 text-xs font-bold text-sky-800 flex items-center gap-1">
+            <span>linkedin.com/in/r-sivanandareddy</span>
             <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
           </div>
         </a>
 
-        <!-- Option 3: Phone / Call / WhatsApp -->
+        <!-- Option 3: Phone / Direct Call -->
         <a href="tel:+918309246760" class="spotlight-card p-6 flex flex-col justify-between group hover:border-emerald-400 transition-all">
           <div class="space-y-3 relative z-10">
-            <div class="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 group-hover:scale-110 transition-transform">
+            <div class="w-10 h-10 rounded-lg bg-emerald-100/70 border border-emerald-200 flex items-center justify-center text-emerald-800 group-hover:scale-110 transition-transform">
               <i data-lucide="phone-call" class="w-5 h-5"></i>
             </div>
             <div>
-              <h4 class="font-bold text-slate-900 text-base">Direct Phone Call</h4>
-              <p class="text-xs text-slate-500 mt-1">Direct voice communication for immediate discussions.</p>
+              <h4 class="font-bold text-slate-900 text-base">Phone Call</h4>
+              <p class="text-xs text-slate-600 mt-1">Direct voice communication for immediate technical inquiries.</p>
             </div>
           </div>
-          <div class="pt-4 border-t border-slate-100 mt-4 relative z-10 text-xs font-bold text-emerald-700 flex items-center gap-1">
+          <div class="pt-4 border-t border-[#e2e5dc] mt-4 relative z-10 text-xs font-bold text-emerald-800 flex items-center gap-1">
             <span>+91 83092 46760</span>
             <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
           </div>
         </a>
 
-        <!-- Option 4: Location / Meet -->
+        <!-- Option 4: Location -->
         <div class="spotlight-card p-6 flex flex-col justify-between">
           <div class="space-y-3 relative z-10">
-            <div class="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700">
+            <div class="w-10 h-10 rounded-lg bg-amber-100/70 border border-amber-200 flex items-center justify-center text-amber-800">
               <i data-lucide="map-pin" class="w-5 h-5"></i>
             </div>
             <div>
               <h4 class="font-bold text-slate-900 text-base">Location</h4>
-              <p class="text-xs text-slate-500 mt-1">Kadapa / Nandyala, Andhra Pradesh. Open to on-site and remote roles.</p>
+              <p class="text-xs text-slate-600 mt-1">Kadapa, Andhra Pradesh. Open to relocation and entry-level engineering roles.</p>
             </div>
           </div>
-          <div class="pt-4 border-t border-slate-100 mt-4 relative z-10 text-xs font-bold text-amber-800">
+          <div class="pt-4 border-t border-[#e2e5dc] mt-4 relative z-10 text-xs font-bold text-amber-900">
             <span>Andhra Pradesh, India</span>
           </div>
         </div>
@@ -581,13 +575,13 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="mt-auto border-t border-slate-200 bg-white/80 backdrop-blur-sm py-10 px-6 text-xs text-slate-500">
-      <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer class="mt-auto border-t border-[#e2e5dc] bg-[#f5f5f0]/95 py-10 px-6 lg:px-12 text-xs text-slate-600">
+      <div class="w-full max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <span>&copy; 2026 Siva Nanda Reddy Ramireddy. All rights reserved.</span>
         <div class="flex items-center gap-6">
           <a href="tel:+918309246760" class="hover:text-slate-900 transition-colors">+91 83092 46760</a>
-          <a href="mailto:rsivareddy46@gmail.com" class="hover:text-sky-700 transition-colors font-medium">rsivareddy46@gmail.com</a>
-          <a href="https://www.linkedin.com/in/r-sivanandareddy" target="_blank" rel="noopener noreferrer" class="hover:text-sky-700 transition-colors font-medium">LinkedIn Profile</a>
+          <a href="mailto:rsivareddy46@gmail.com" class="hover:text-sky-800 transition-colors font-semibold">E-Mail</a>
+          <a href="https://www.linkedin.com/in/r-sivanandareddy" target="_blank" rel="noopener noreferrer" class="hover:text-sky-800 transition-colors font-semibold">LinkedIn</a>
         </div>
       </div>
     </footer>
